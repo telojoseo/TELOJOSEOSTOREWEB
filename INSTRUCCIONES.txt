@@ -1,0 +1,237 @@
+================================================================================
+  ⚙️ INSTRUCCIONES COMPLETAS - Mi Tienda Multi-Cliente
+================================================================================
+
+¡BIENVENIDO! Esta es tu app de facturación que puedes compartir con CUALQUIER 
+cliente. Cada uno usa sus propias claves de Firebase.
+
+================================================================================
+  PASO 1: PARA TI (Primera Vez)
+================================================================================
+
+1. Descarga esta carpeta
+2. Abre "setup.html" en tu navegador (no necesita servidor)
+3. Ve a https://console.firebase.google.com
+4. Crea un proyecto nuevo (ej: "Mi Tienda JM CLOSET")
+5. Copia las 6 claves y pégalas en setup.html
+6. Ingresa datos de tu tienda (nombre, logo, etc)
+7. Haz clic en "Guardar Configuración"
+8. ¡Ya funciona! La app se abrirá automáticamente
+
+================================================================================
+  PASO 2: SUBIR A GITHUB (Para Compartir)
+================================================================================
+
+OPCIÓN A: GitHub Desktop (MÁS FÁCIL)
+
+1. Descarga GitHub Desktop (desktop.github.com)
+2. Abre GitHub Desktop
+3. Haz clic en "File" → "Clone repository"
+4. O: File → "Add local repository" → Selecciona tu carpeta
+5. Haz clic derecho en la carpeta → "Open in GitHub Desktop"
+6. En GitHub Desktop:
+   - Title: "Versión inicial"
+   - Description: "App de facturación"
+   - Haz clic en "Commit to main"
+   - Luego "Publish repository"
+7. En el navegador, autentica tu GitHub
+
+OPCIÓN B: Terminal (LÍNEA DE COMANDOS)
+
+```
+# Abre Terminal (Mac/Linux) o PowerShell (Windows)
+# Ve a tu carpeta del proyecto y ejecuta:
+
+git init
+git add .
+git commit -m "Versión inicial de mi tienda"
+git branch -M main
+git remote add origin https://github.com/TU_USUARIO/nombre-tienda.git
+git push -u origin main
+```
+
+Reemplaza:
+- TU_USUARIO = tu usuario de GitHub
+- nombre-tienda = nombre para el repositorio (ej: jm-closet-app)
+
+================================================================================
+  PASO 3: DESPLEGAR EN NETLIFY (Para que Funcione Online)
+================================================================================
+
+OPCIÓN A: Arrastra y Suelta (RECOMENDADO - MÁS FÁCIL)
+
+1. Ve a netlify.com
+2. Crea cuenta gratis (con GitHub)
+3. En el panel, arrastra tu carpeta completa
+4. ¡Listo! Netlify te da un URL (ej: jm-closet-app-123.netlify.app)
+
+OPCIÓN B: Desde GitHub (Se actualiza automáticamente)
+
+1. Ve a netlify.com y entra con tu GitHub
+2. Haz clic en "New site from Git"
+3. Selecciona GitHub y autoriza
+4. Selecciona tu repositorio (nombre-tienda)
+5. Configuración:
+   - Build command: (DÉJALO VACÍO)
+   - Publish directory: . (un punto)
+6. Haz clic en "Deploy"
+7. Espera 2-3 minutos
+8. Netlify te da tu URL oficial
+
+================================================================================
+  PASO 4: COMPARTIR CON OTROS CLIENTES
+================================================================================
+
+Simplemente envíales tu URL de Netlify (ej: jm-closet-app-123.netlify.app)
+
+Cuando ELLOS entren por primera vez:
+1. Se abrirá setup.html automáticamente
+2. Ellos ingresarán SUS claves de Firebase (de su propio proyecto)
+3. Ellos ingresarán datos de SU tienda
+4. ¡Listo! Cada uno trabaja con su propia configuración
+
+================================================================================
+  ARCHIVOS IMPORTANTES
+================================================================================
+
+setup.html
+  → La página de configuración inicial
+  → Se abre automáticamente si no hay datos guardados
+  → Los usuarios la usan para ingresar sus datos
+
+index.html
+  → Tu app principal
+  → Se abre después de configurar
+
+.gitignore
+  → Protege tus claves (no las sube a GitHub)
+
+README.md
+  → Documentación completa (léelo si tienes dudas)
+
+================================================================================
+  ¿CÓMO OBTENGO MIS CLAVES DE FIREBASE?
+================================================================================
+
+1. Ve a console.firebase.google.com
+2. Crea un nuevo proyecto:
+   - Nombre: Tu nombre de tienda
+   - Desactiva Google Analytics (no necesitas)
+   - Crear proyecto
+3. Espera a que se cree (2 min)
+4. En la izquierda, haz clic en ⚙️ "Configuración del Proyecto"
+5. Ve a la pestaña "Tu aplicación"
+6. Haz clic en el icono de web 🌐
+7. Copea el objeto firebaseConfig completo
+
+Tendrás algo como:
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD...",
+  authDomain: "tu-proyecto.firebaseapp.com",
+  projectId: "tu-proyecto",
+  storageBucket: "tu-proyecto.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123..."
+};
+
+Copia cada línea en setup.html cuando la abras.
+
+================================================================================
+  ¿QUÉ NECESITO HABILITAR EN FIREBASE?
+================================================================================
+
+1. Firestore Database (Base de datos)
+   - Ve a "Firestore Database" en el menú
+   - Haz clic en "Crear base de datos"
+   - Modo: "Modo de prueba" (gratis)
+   - Ubicación: usa la que te propone
+   - Crear
+
+2. Authentication (Autenticación)
+   - Ve a "Authentication" en el menú
+   - Haz clic en "Comenzar"
+   - Habilita "Email/Contraseña"
+
+¡Eso es todo lo que necesitas! Los otros servicios (Storage, etc) 
+son opcionales.
+
+================================================================================
+  SEGURIDAD - LO IMPORTANTE
+================================================================================
+
+✅ TUS CLAVES DE FIREBASE estarán en setup.html
+✅ Cada cliente ingresa SUS propias claves
+✅ Las claves NO se suben a GitHub (gracias a .gitignore)
+✅ Las claves se guardan en localStorage del navegador (seguro)
+✅ Cada Firestore es independiente
+
+❌ NUNCA compartas tus claves de Firebase en texto
+❌ NUNCA las pongas en código visible
+
+================================================================================
+  TROUBLESHOOTING - PROBLEMAS COMUNES
+================================================================================
+
+PROBLEMA: "Aparece setup.html pero no funciona"
+SOLUCIÓN: 
+  1. Recargue la página
+  2. Verifique que el Project ID sea correcto (sin espacios ni caracteres raros)
+  3. Abra Firebase Console y verifique que el proyecto existe
+
+PROBLEMA: "Los datos no se guardan"
+SOLUCIÓN:
+  1. Abre DevTools (F12)
+  2. Ve a Console
+  3. Busca mensajes de error en rojo
+  4. Verifica que Firebase Firestore esté habilitado
+
+PROBLEMA: "El logo no aparece en la factura"
+SOLUCIÓN:
+  1. Usa URLs que terminen en .png o .jpg
+  2. GitHub y Imgur funcionan bien
+  3. No uses Google Drive (bloqueado por CORS)
+
+PROBLEMA: "Quiero cambiar mis datos de Firebase"
+SOLUCIÓN:
+  1. En la app, busca "Configuración" → "Restablecer"
+  2. O: Abre DevTools (F12) → Console
+  3. Ejecuta: localStorage.clear()
+  4. Recarga la página
+  5. Volverá a aparecer setup.html
+
+================================================================================
+  ACTUALIZAR LA APP (Después)
+================================================================================
+
+Si cambias algo en los archivos:
+
+1. Edita el archivo que necesites
+2. En Terminal/PowerShell:
+   git add .
+   git commit -m "Descripción del cambio"
+   git push
+3. Netlify automáticamente redeploy (en 1-2 min)
+4. Tus clientes verán los cambios sin hacer nada
+
+================================================================================
+  DUDAS? LEE README.md
+================================================================================
+
+README.md tiene información completa y FAQ. Está en la misma carpeta.
+
+================================================================================
+  ¡LISTO! 🎉
+================================================================================
+
+Ya tienes todo. Ahora:
+
+1. ✅ Abre setup.html y configura TU tienda
+2. ✅ Sube a GitHub (opcional pero recomendado)
+3. ✅ Despliega en Netlify
+4. ✅ Comparte tu URL con tus clientes
+5. ✅ Ellos se autoconfiguran en setup.html
+
+¡Tu app está lista para usarse con múltiples clientes!
+
+================================================================================
