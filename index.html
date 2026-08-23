@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#000000">
+    <link id="favicon-link" rel="apple-touch-icon" href="https://raw.githubusercontent.com/famlyfragrancerd-byte/famlyfragrancerd-web/54362eb6b882b258af2a8d6f066984c090a95436/logo%20png%20famly.png">
+    
+    <!-- Google Fonts con soporte completo de Unicode/emoji -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+    <title id="page-title">Mi Tienda | </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'perfume-magenta': 'var(--primary, #000000)', 
+                        'perfume-light': 'var(--bg-light, #ffffff)',   
+                        'perfume-dark': 'var(--secondary, #000000)',    
+                    },
+                    fontFamily: {
+                        // Sobrescribimos sans/serif/mono con fuentes que soportan
+                        // acentos, ñ y emoji en todos los dispositivos
+                        'sans':  ['Inter', 'system-ui', 'Arial', 'sans-serif'],
+                        'serif': ['Playfair Display', 'Georgia', 'serif'],
+                        'mono':  ['Inter', 'system-ui', 'Arial', 'sans-serif'], // evitamos Courier/monospace
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <!-- LIBRERÍAS PARA GENERAR PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qz-tray@2.2.6/qz-tray.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body id="main-body" class="text-gray-700 font-sans antialiased transition-colors duration-500">
+
+    <!-- PANTALLA DE CARGA -->
+    <div id="splash-screen">
+        <img id="splash-logo" src="https://raw.githubusercontent.com/famlyfragrancerd-byte/famlyfragrancerd-web/54362eb6b882b258af2a8d6f066984c090a95436/logo%20png%20famly.png" alt="FamlyFragrancerd Cargando">
+    </div>
+
+    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+    <div id="whatsapp-container" class="fixed bottom-6 right-6 z-[90]">
+        <a href="https://wa.me/18495161973" id="whatsapp-float" target="_blank" class="bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center justify-center group animate-bounce-slow">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.648.835 5.125 2.378 7.218L.063 24l4.909-1.286A11.97 11.97 0 0012.031 24c6.645 0 12.031-5.385 12.031-12.031S18.676 0 12.031 0zm0 21.992c-2.22 0-4.382-.593-6.281-1.716l-.45-.266-3.64.954.969-3.548-.293-.466A9.975 9.975 0 012.039 12.03c0-5.517 4.49-10.007 10.007-10.007s10.007 4.49 10.007 10.007-4.49 10.007-10.007 10.007zm5.494-7.514c-.302-.15-1.785-.882-2.062-.983-.277-.101-.48-.15-.683.15s-.782.982-.958 1.183c-.176.202-.352.227-.654.076-2.144-.943-3.705-2.618-4.316-3.666-.126-.201.066-.188.358-.769.101-.202.05-.378-.025-.53-.076-.15-.683-1.646-.935-2.253-.246-.593-.496-.513-.683-.523-.176-.008-.378-.01-.58-.01-.202 0-.53.076-.807.378-.277.302-1.058 1.034-1.058 2.52s1.083 2.923 1.234 3.125c.15.202 2.13 3.253 5.158 4.558 2.019.869 2.809.948 3.842.793 1.144-.171 2.593-1.049 2.956-2.066.363-1.017.363-1.89.254-2.066-.109-.176-.411-.277-.713-.428z"/>
+            </svg>
+            <span id="whatsapp-tooltip" class="absolute right-full mr-3 bg-white text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-100">¿Tienes dudas? ¡Escríbenos!</span>
+        </a>
+    </div>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <header id="main-header" class="backdrop-blur-md fixed w-full z-40 top-0 border-b border-gray-200 py-3">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#inicio" class="flex items-center">
+                <img src="https://raw.githubusercontent.com/famlyfragrancerd-byte/famlyfragrancerd-web/54362eb6b882b258af2a8d6f066984c090a95436/logo%20png%20famly.png" 
+                     alt="FamlyFragrancerd Logo" 
+                     class="h-16 md:h-24 w-auto object-contain transition-all duration-300" 
+                     id="main-logo"
+                     onerror="this.src='https://raw.githubusercontent.com/famlyfragrancerd-byte/famlyfragrancerd-web/54362eb6b882b258af2a8d6f066984c090a95436/logo%20png%20famly.png'; this.onerror=null;">
+            </a>
+            
+            <nav class="hidden lg:flex space-x-8 items-center absolute left-1/2 transform -translate-x-1/2">
+                <a href="#inicio" class="nav-link text-gray-700 hover:text-perfume-magenta font-semibold transition">Inicio</a>
+                <a href="#catalogo" class="nav-link text-gray-700 hover:text-perfume-magenta font-semibold transition">Catálogo</a>
+                <a href="#contacto" class="nav-link text-gray-700 hover:text-perfume-magenta font-semibold transition">Contacto</a>
+            </nav>
+            
+            <div class="flex items-center space-x-2 md:space-x-4">
+                <button onclick="openTrackingModal()" class="flex flex-col items-center justify-center text-gray-700 hover:text-perfume-magenta transition cursor-pointer p-1.5 hover:scale-105 transform duration-200 group" title="Rastrear Pedido">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-wider group-hover:text-perfume-magenta">Rastrear</span>
+                </button>
+
+                <button id="nav-cart-btn" onclick="toggleCart()" class="flex flex-col items-center justify-center text-gray-700 hover:text-perfume-magenta transition cursor-pointer p-1.5 hover:scale-105 transform duration-200 group">
+                    <div class="relative mb-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span id="cart-badge" class="absolute -top-1.5 -right-2 bg-perfume-magenta text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden border border-white">0</span>
+                    </div>
+                    <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-wider group-hover:text-perfume-magenta">Carrito</span>
+                </button>
+
+                <button id="nav-login-btn" onclick="handleProfileClick()" class="flex items-center gap-1 md:gap-2 bg-perfume-magenta text-white px-3 py-1.5 md:px-5 md:py-2 rounded-full hover:bg-perfume-dark transition duration-300 font-semibold text-xs md:text-sm shadow-md hover:shadow-lg transform hover:-translate-y-0.5 ml-1 md:ml-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    <span id="nav-login-text">Ingresar</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECCIÓN PRINCIPAL (HERO) -->
+    <section id="inicio" class="mt-28 pt-12 pb-20 min-h-[70vh] flex items-center transition-all duration-500">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div id="hero-text-container" class="md:w-1/2 mb-10 md:mb-0 md:pr-10 text-center md:text-left transition-all duration-500">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-perfume-dark leading-tight mb-6 tracking-tight">
+                    <span id="display-hero-title1">Tu esencia,</span><br>
+                    <span id="display-hero-title2" class="text-perfume-magenta">tu identidad.</span>
+                </h1>
+                <p id="display-hero-subtitle" class="text-lg text-gray-500 mb-8 max-w-lg mx-auto md:mx-0 opacity-80">
+                    Fragancias originales seleccionadas para destacar tu personalidad en cada momento especial.
+                </p>
+                <a href="#catalogo" id="display-hero-btn" class="inline-block bg-perfume-dark text-white px-8 py-3.5 rounded-full text-lg font-medium hover:bg-perfume-magenta transition duration-300 shadow-lg transform hover:-translate-y-1">
+                    Explorar Colección
+                </a>
+            </div>
+            <div class="md:w-1/2 flex justify-center" id="hero-media-container">
+                <img id="display-hero-img" src="https://images.unsplash.com/photo-1594035910387-fea47794261f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Perfume" class="rounded-3xl shadow-xl max-w-full h-auto object-cover max-h-[300px] md:max-h-[500px] hover:scale-105 transition duration-500">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE CATÁLOGO DINÁMICO -->
+    <section id="catalogo" class="py-20 bg-gray-50/50 min-h-[500px]">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 id="display-catalog-title" class="text-3xl md:text-4xl font-bold text-perfume-dark mb-4">Colección Exclusiva</h2>
+                <div class="w-16 h-1 bg-perfume-magenta mx-auto rounded-full"></div>
+                
+                <div class="max-w-3xl mx-auto mt-8">
+                    <!-- BARRA DE BÚSQUEDA MODERNIZADA -->
+                    <div class="relative group">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none transition-colors group-focus-within:text-perfume-magenta">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </span>
+                        <input type="text" id="catalog-search" oninput="filterCatalog()" placeholder="Buscar fragancia, marca o SKU..." class="w-full pl-12 pr-11 py-4 rounded-2xl border-2 border-gray-200 shadow-md text-sm focus:outline-none focus:border-perfume-magenta transition-all font-medium" style="background:#ffffff; color:#111827; caret-color: var(--primary);" placeholder-class="text-gray-400">
+                        <button id="catalog-search-clear-btn" type="button" onclick="document.getElementById('catalog-search').value=''; filterCatalog(); this.classList.add('hidden');" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-600 transition p-1 rounded-full hover:bg-gray-100">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                        <div id="search-suggestions" class="absolute top-full left-0 w-full bg-white mt-2 rounded-2xl shadow-2xl border border-gray-100 z-50 hidden max-h-80 overflow-y-auto divide-y divide-gray-50"></div>
+                    </div>
+
+                    <!-- CHIPS DE CATEGORÍA -->
+                    <div class="mt-4">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Categoría</p>
+                        <div id="cat-chips" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+                    </div>
+
+                    <!-- CHIPS DE MARCA -->
+                    <div class="mt-3">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Marca</p>
+                        <div id="brand-chips" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 transition-all duration-500">
+                <div class="col-span-full text-center py-10">
+                    <div class="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-perfume-magenta mb-4"></div>
+                    <p class="text-gray-500">Cargando catálogo...</p>
+                </div>
+            </div>
+            <div id="catalog-pagination" class="flex flex-nowrap justify-center items-center gap-2 mt-6 overflow-x-auto no-scrollbar py-1"></div>
+            <p id="catalog-empty-msg" class="text-center text-gray-500 py-10 font-medium hidden">No se encontraron perfumes con esa búsqueda.</p>
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+    <footer id="contacto" class="py-12 border-t border-gray-200 transition-colors duration-500">
+        <div class="container mx-auto px-4 text-center">
+            <img src="https://raw.githubusercontent.com/famlyfragrancerd-byte/famlyfragrancerd-web/54362eb6b882b258af2a8d6f066984c090a95436/logo%20png%20famly.png" alt="Logo" class="h-40 mx-auto mb-4 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition duration-300 footer-logo">
+            <p class="text-gray-500 mb-6 font-medium">
+                <span id="display-footer-email">info@famlyfragrancerd.com</span> | 
+                <span id="display-footer-phone">+1 (849) 516-1973</span> | 
+                <span id="display-footer-address">Santiago, RD</span>
+            </p>
+            
+            <div id="social-links-container" class="flex justify-center space-x-6 mb-8">
+                <a href="#" id="display-social-ig" target="_blank" class="hidden text-gray-400 hover:text-perfume-magenta transition hover:scale-110 transform"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                <a href="#" id="display-social-fb" target="_blank" class="hidden text-gray-400 hover:text-perfume-magenta transition hover:scale-110 transform"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
+                <a href="#" id="display-social-tt" target="_blank" class="hidden text-gray-400 hover:text-perfume-magenta transition hover:scale-110 transform"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.23-1.15 4.41-2.9 5.83-1.74 1.43-4.13 2.07-6.38 1.69-2.26-.38-4.32-1.71-5.55-3.56-1.23-1.85-1.57-4.24-1-6.38.56-2.14 2.1-3.95 4.08-4.88 1.98-.94 4.31-1.02 6.36-.21V13.5c-1.15-.43-2.45-.48-3.64-.13-1.19.34-2.22 1.15-2.81 2.22-.59 1.06-.71 2.37-.34 3.52.37 1.15 1.25 2.12 2.34 2.62 1.09.5 2.4.52 3.51.06 1.11-.46 1.99-1.35 2.4-2.47.41-1.12.39-2.4-.06-3.51-.45-1.1-1.34-1.98-2.46-2.39V.02z"/></svg></a>
+                <a href="#" id="display-social-wa" target="_blank" class="hidden text-gray-400 hover:text-perfume-magenta transition hover:scale-110 transform"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.648.835 5.125 2.378 7.218L.063 24l4.909-1.286A11.97 11.97 0 0012.031 24c6.645 0 12.031-5.385 12.031-12.031S18.676 0 12.031 0zm0 21.992c-2.22 0-4.382-.593-6.281-1.716l-.45-.266-3.64.954.969-3.548-.293-.466A9.975 9.975 0 012.039 12.03c0-5.517 4.49-10.007 10.007-10.007s10.007 4.49 10.007 10.007-4.49 10.007-10.007 10.007zm5.494-7.514c-.302-.15-1.785-.882-2.062-.983-.277-.101-.48-.15-.683.15s-.782.982-.958 1.183c-.176.202-.352.227-.654.076-2.144-.943-3.705-2.618-4.316-3.666-.126-.201.066-.188.358-.769.101-.202.05-.378-.025-.53-.076-.15-.683-1.646-.935-2.253-.246-.593-.496-.513-.683-.523-.176-.008-.378-.01-.58-.01-.202 0-.53.076-.807.378-.277.302-1.058 1.034-1.058 2.52s1.083 2.923 1.234 3.125c.15.202 2.13 3.253 5.158 4.558 2.019.869 2.809.948 3.842.793 1.144-.171 2.593-1.049 2.956-2.066.363-1.017.363-1.89.254-2.066-.109-.176-.411-.277-.713-.428z"/></svg></a>
+            </div>
+
+            <p class="text-xs text-gray-400">&copy; <span id="current-year">2026</span> famlyfragrancerd. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- MODALES Y PANELES -->
+    <!-- ========================================== -->
+
+    <!-- DETALLES DEL PRODUCTO (MODAL) -->
+    <div id="product-details-modal" class="fixed inset-0 bg-gray-900/80 z-[160] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl relative transform scale-95 transition-transform duration-300 flex flex-col md:flex-row overflow-hidden max-h-[95vh]" id="product-details-box">
+            <button onclick="closeProductModal()" class="absolute top-2 right-2 md:top-3 md:right-3 bg-white/90 md:bg-black/50 text-black md:text-white border border-gray-200 md:border-none rounded-full w-8 h-8 flex items-center justify-center hover:bg-black hover:text-white z-50 transition shadow-md backdrop-blur-sm">&times;</button>
+            
+            <div id="detail-img-container" class="w-full md:w-1/2 bg-gray-50 flex items-center justify-center relative h-64 md:h-auto shrink-0 border-b border-gray-100 md:border-none overflow-hidden cursor-crosshair group" onmousemove="handleZoom(event)" onmouseleave="resetZoom()" ontouchmove="handleTouchZoom(event)" ontouchend="resetZoom()">
+                <img id="detail-img" src="" alt="Perfume" fetchpriority="high" decoding="async" class="w-full h-full object-contain mix-blend-multiply transition-all duration-200 p-4 md:p-8">
+                
+                <div class="hidden md:flex absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white text-[10px] font-bold px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20 items-center gap-1.5 shadow-md pointer-events-none">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                    Pasa el mouse para explorar
+                </div>
+
+                <div id="detail-barcode-badge" class="absolute top-4 left-4 bg-white/90 backdrop-blur text-gray-800 text-[10px] font-mono px-2 py-1 rounded hidden border border-gray-300 shadow-sm z-10">
+                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg><span id="detail-barcode-text"></span>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/2 flex flex-col flex-1 overflow-hidden relative bg-white">
+                <div class="p-5 md:p-8 pb-4 flex-1 overflow-y-auto no-scrollbar">
+                    <span id="detail-cat" class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block">Categoría</span>
+                    
+                    <div class="flex justify-between items-start mb-2 gap-2">
+                        <h2 id="detail-name" class="text-2xl md:text-3xl font-extrabold text-perfume-dark leading-tight flex-1">Nombre</h2>
+                        <button onclick="shareCurrentProduct()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 p-2.5 rounded-full transition shadow-sm shrink-0 flex items-center justify-center" title="Compartir este perfume">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                        </button>
+                    </div>
+                    
+                    <div id="detail-swatches-container" class="mb-4 hidden">
+                        <h3 id="detail-swatches-title" class="text-sm font-bold text-gray-700 mb-2 hidden"></h3>
+                        <div id="detail-swatches-list" class="grid grid-cols-6 gap-2 sm:gap-3 justify-items-center w-full pt-2"></div>
+                    </div>
+
+                    <div class="mb-4">
+                        <select id="detail-variant" onchange="updateDetailPrice()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm font-bold text-perfume-dark focus:outline-none focus:border-perfume-magenta bg-gray-50 cursor-pointer">
+                            <option value="full" id="opt-full-price">Botella Completa - RD$ 0</option>
+                        </select>
+                    </div>
+
+                    <div id="detail-price-display" class="mb-4"></div>
+                    
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-1">Notas y Descripción:</h4>
+                        <p id="detail-desc" class="text-gray-500 text-sm leading-relaxed whitespace-pre-wrap">Sin descripción.</p>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="detail-id">
+                
+                <div class="p-4 md:p-6 bg-white border-t border-gray-100 shrink-0 z-20 shadow-[0_-15px_15px_-5px_rgba(0,0,0,0.03)]">
+                    <div class="flex items-center gap-3 w-full" id="detail-actions-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL LATERAL: CARRITO -->
+    <div id="cart-modal" class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-white border-l border-gray-200 z-[100] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+        <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-white">
+            <h2 class="text-lg font-extrabold text-perfume-dark flex items-center gap-2.5">
+                <span class="bg-perfume-magenta text-white p-1.5 rounded-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </span>
+                Tu Carrito
+            </h2>
+            <button onclick="toggleCart()" class="p-2 text-gray-400 hover:text-perfume-magenta hover:bg-gray-100 rounded-xl transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 no-scrollbar bg-perfume-light"></div>
+        <div class="p-6 border-t border-gray-100 bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)]">
+            <div class="mb-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <label class="block text-xs text-gray-600 font-bold mb-1">Tu Número de WhatsApp (Requerido)</label>
+                <input type="tel" id="checkout-phone" placeholder="Ej: 8091234567" class="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:border-perfume-magenta bg-white">
+            </div>
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-500 font-medium">Total:</span>
+                <span id="cart-total" class="text-2xl font-bold text-perfume-dark">RD$ 0</span>
+            </div>
+            <button id="btn-checkout-wa" onclick="checkoutWhatsApp()" class="w-full bg-perfume-magenta text-white py-3.5 rounded-xl font-bold hover:bg-perfume-dark transition shadow-md flex items-center justify-center gap-2">
+                Realizar Pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- PANEL DE CLIENTE -->
+    <div id="profile-modal" class="fixed top-0 right-0 w-full sm:w-[420px] h-screen bg-white shadow-2xl flex flex-col z-50 transition-transform transform translate-x-full duration-300">
+
+        <!-- HEADER con avatar + nombre prominente -->
+        <div class="bg-gradient-to-br from-perfume-dark to-gray-800 text-white px-5 pt-5 pb-4 shrink-0">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-2xl font-extrabold shadow-inner">
+                        <span id="profile-initial" class="text-white">?</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 id="profile-name" class="text-lg font-extrabold leading-tight truncate">Cargando...</h3>
+                        <p id="profile-email" class="text-white/70 text-xs mt-0.5 truncate">...</p>
+                        <div class="flex items-center gap-1.5 mt-1">
+                            <span class="text-[9px] text-white/50 font-bold uppercase tracking-widest">ID</span>
+                            <span id="profile-id" class="text-[10px] font-mono text-white/80 bg-white/10 px-1.5 py-0.5 rounded select-all">...</span>
+                            <button onclick="navigator.clipboard.writeText(document.getElementById('profile-id').innerText).then(()=>window.showToast('ID copiado'))" class="text-white/40 hover:text-white transition" title="Copiar ID">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeProfileModal()" class="text-white/60 hover:text-white transition p-1 -mt-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Botones de admin (solo visibles para administradores) -->
+            <div class="space-y-2" id="admin-buttons-group">
+                <button id="btn-admin-panel" onclick="openAdminModal()" class="hidden w-full bg-white/15 hover:bg-white/25 border border-white/20 text-white py-2.5 rounded-xl font-bold transition flex items-center justify-center gap-2 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+                    Panel de Administrador
+                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="btn-orders-dashboard" onclick="openOrdersDashboard()" class="hidden bg-white/15 hover:bg-white/25 border border-white/20 text-white py-2.5 rounded-xl font-bold transition flex items-center justify-center gap-1.5 text-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        Monitor
+                    </button>
+                    <button id="btn-billing-panel" onclick="window.openBillingModal()" class="hidden bg-green-600/80 hover:bg-green-600 border border-green-500/30 text-white py-2.5 rounded-xl font-bold transition flex items-center justify-center gap-1.5 text-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Facturación
+                    </button>
+                </div>
+                <button id="btn-push-notifications" onclick="requestPushNotifications()" class="hidden w-full bg-blue-600/80 hover:bg-blue-600 border border-blue-500/30 text-white py-2 rounded-xl font-bold transition flex items-center justify-center gap-2 text-xs">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    Activar Alertas Push
+                </button>
+            </div>
+        </div>
+
+        <!-- TABS de navegación -->
+        <div class="flex border-b border-gray-200 bg-white shrink-0">
+            <button onclick="switchProfileTab('orders')" id="profile-tab-btn-orders" class="flex-1 py-3 text-xs font-bold text-perfume-magenta border-b-2 border-perfume-magenta transition flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                Mis Pedidos
+            </button>
+            <button onclick="switchProfileTab('info')" id="profile-tab-btn-info" class="flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-700 transition flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                Mi Perfil
+            </button>
+            <button onclick="switchProfileTab('security')" id="profile-tab-btn-security" class="flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-700 transition flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Seguridad
+            </button>
+        </div>
+
+        <!-- CONTENIDO con scroll -->
+        <div class="flex-1 overflow-y-auto no-scrollbar">
+
+            <!-- TAB: MIS PEDIDOS -->
+            <div id="profile-tab-orders" class="p-4 space-y-3">
+                <div id="orders-list" class="space-y-3"></div>
+                <div id="orders-pagination" class="mt-2"></div>
+                <button id="btn-toggle-all-orders" onclick="toggleAllUserOrders()" class="hidden w-full bg-gray-50 border border-gray-200 text-gray-600 py-2.5 rounded-xl font-bold text-xs shadow-sm hover:bg-gray-100 transition mt-2">Ver todos mis pedidos</button>
+            </div>
+
+            <!-- TAB: MI PERFIL -->
+            <div id="profile-tab-info" class="hidden p-4 space-y-4">
+                <!-- Número de WhatsApp -->
+                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 bg-[#25D366]/10 rounded-xl flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">Número de WhatsApp</p>
+                            <p class="text-[11px] text-gray-400">Úsalo para rastrear tus pedidos</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="tel" id="profile-phone-input" placeholder="Ej: 8091234567" class="flex-1 border-2 border-gray-200 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-perfume-magenta font-medium">
+                        <button onclick="updateUserPhone()" class="bg-perfume-magenta text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-perfume-dark transition shadow-sm">Guardar</button>
+                    </div>
+                </div>
+
+                <!-- Dirección de envío -->
+                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 bg-perfume-light rounded-xl flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-perfume-magenta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">Dirección de Envío</p>
+                            <p class="text-[11px] text-gray-400">Se auto-rellena al hacer tu próximo pedido</p>
+                        </div>
+                    </div>
+                    <textarea id="profile-address-input" placeholder="Ej: C/ Principal #25, Sector La Fe, Santiago" rows="2" class="w-full border-2 border-gray-200 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-perfume-magenta font-medium resize-none mb-2"></textarea>
+                    <button onclick="window.updateUserAddress()" class="w-full bg-perfume-magenta text-white py-2.5 rounded-xl text-sm font-bold hover:bg-perfume-dark transition">Guardar Dirección</button>
+                </div>
+
+                <!-- Info de la cuenta -->
+                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Información de la cuenta</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                            <span class="text-xs text-gray-500 font-bold">Nombre</span>
+                            <span id="profile-info-name" class="text-xs font-bold text-gray-800">—</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                            <span class="text-xs text-gray-500 font-bold">Email</span>
+                            <span id="profile-info-email" class="text-xs font-bold text-gray-800 truncate max-w-[180px]">—</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-xs text-gray-500 font-bold">ID de cuenta</span>
+                            <button onclick="navigator.clipboard.writeText(document.getElementById('profile-id').innerText).then(()=>window.showToast('ID copiado'))" class="text-xs font-mono text-gray-600 hover:text-perfume-magenta flex items-center gap-1 transition">
+                                <span id="profile-info-id">—</span>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="logout()" class="w-full border-2 border-red-200 text-red-500 py-3 rounded-xl font-bold text-sm hover:bg-red-50 transition flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    Cerrar Sesión
+                </button>
+            </div>
+
+            <!-- TAB: SEGURIDAD -->
+            <div id="profile-tab-security" class="hidden p-4 space-y-4">
+                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 bg-gray-200 rounded-xl flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">Cambiar Contraseña</p>
+                            <p class="text-[11px] text-gray-400">Mínimo 6 caracteres</p>
+                        </div>
+                    </div>
+                    <input type="password" id="new-password" placeholder="Nueva contraseña" class="w-full border-2 border-gray-200 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-perfume-magenta mb-2">
+                    <button onclick="changeUserPassword()" class="w-full bg-gray-800 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-black transition">Actualizar Contraseña</button>
+                </div>
+
+                <div class="bg-red-50 rounded-2xl p-4 border border-red-100">
+                    <p class="text-xs font-bold text-red-500 uppercase tracking-wide mb-1">Zona de peligro</p>
+                    <p class="text-[11px] text-gray-500 mb-3">Cerrar sesión en todos los dispositivos desconecta tu cuenta de esta sesión.</p>
+                    <button onclick="logout()" class="w-full border-2 border-red-300 text-red-500 py-2.5 rounded-xl font-bold text-sm hover:bg-red-100 transition">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE RASTREO (GUEST TRACKING) -->
+    <div id="tracking-modal" class="fixed inset-0 bg-gray-900/80 z-[160] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[90vh]" id="tracking-box">
+            <button onclick="closeTrackingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 text-3xl leading-none z-50">&times;</button>
+            <div class="p-6 md:p-8 flex-1 overflow-y-auto no-scrollbar">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-perfume-light rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-perfume-magenta text-perfume-magenta">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-perfume-dark">Rastrea tu Pedido</h2>
+                    <p class="text-gray-500 text-sm mt-1">Ingresa el código de tu pedido para ver su progreso.</p>
+                </div>
+                
+                <div id="tracking-form-container">
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Código de Orden</label>
+                            <input type="text" id="track-order-id" placeholder="Ej: #PED-A1B2C" class="w-full border border-gray-300 px-4 py-3.5 rounded-xl text-sm focus:outline-none focus:border-perfume-magenta uppercase font-mono bg-gray-50 shadow-sm transition">
+                        </div>
+                        <button onclick="searchGuestOrder()" id="btn-track-order" class="w-full bg-perfume-dark text-white py-3.5 rounded-xl font-bold hover:bg-black transition shadow-lg flex items-center justify-center gap-2">
+                            🔍 Localizar Paquete
+                        </button>
+                    </div>
+                </div>
+
+                <div id="tracking-result-container" class="hidden border-t border-gray-100 pt-6">
+                    <!-- Resultados del progreso de la barra se pintan aquí -->
+                </div>
+            </div>
+            <div class="bg-gray-50 p-4 border-t border-gray-100 text-center shrink-0">
+                <p class="text-xs text-gray-500">¿Tienes cuenta? <button onclick="closeTrackingModal(); handleProfileClick();" class="font-bold text-perfume-magenta hover:underline">Inicia sesión aquí</button></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE ADMINISTRADOR AVANZADO (A PANTALLA COMPLETA) -->
+    <div id="admin-modal" class="fixed inset-0 bg-gray-100 z-[200] flex-col transition-opacity duration-300 opacity-0" style="display:none">
+        <div class="bg-white border-b border-gray-200 px-4 md:px-8 pt-4 pb-0 shadow-sm flex flex-col shrink-0">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-extrabold text-perfume-dark flex items-center gap-2.5">
+                    <span class="bg-perfume-dark text-white p-1.5 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </span>
+                    Panel de Administración
+                </h2>
+                <button onclick="closeAdminModal()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="Cerrar Panel">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="flex gap-6 overflow-x-auto no-scrollbar">
+                <button onclick="switchAdminTab('products')" id="tab-btn-products" class="text-xs md:text-sm font-bold text-perfume-magenta border-b-2 border-perfume-magenta pb-3 uppercase tracking-wide whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    Productos
+                </button>
+                <button onclick="switchAdminTab('categories')" id="tab-btn-categories" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                    Categorías y Marcas
+                </button>
+                <button onclick="switchAdminTab('clients')" id="tab-btn-clients" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Clientes VIP
+                </button>
+                <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+                    Configurar Tienda
+                </button>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8" id="admin-box">
+            
+            <!-- PESTAÑA: PRODUCTOS -->
+            <div id="admin-tab-products" class="max-w-6xl mx-auto w-full">
+                <div class="max-w-2xl mx-auto mb-8">
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 relative shadow-sm">
+                        <button id="admin-cancel-edit" onclick="resetAdminForm()" class="hidden absolute top-4 right-4 text-xs font-bold text-gray-500 hover:text-red-500">Cancelar</button>
+                        
+                        <h3 id="admin-form-title" class="font-bold text-perfume-dark mb-4">➕ Agregar Perfume</h3>
+                        <form id="admin-add-form" onsubmit="addDynamicProduct(event)" class="space-y-3">
+                            <input type="hidden" id="admin-prod-id"> 
+                            <div class="flex gap-2">
+                                <input type="text" id="admin-prod-name" required placeholder="Nombre del Perfume" class="w-1/2 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                                <select id="admin-prod-brand" required class="w-1/2 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                                    <option value="" disabled selected>Selecciona Marca</option>
+                                </select>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <input type="text" id="admin-prod-barcode" placeholder="Código de Barras / SKU (Opcional)" class="flex-1 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta font-mono">
+                                <button type="button" onclick="openScannerModal()" class="bg-gray-800 text-white px-3 rounded-lg hover:bg-black transition flex items-center justify-center" title="Escanear con la cámara">📷</button>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <select id="admin-prod-cat" required class="w-1/3 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                                    <option value="" disabled selected>Selecciona Categoría</option>
+                                </select>
+                                <input type="number" id="admin-prod-price" required min="1" placeholder="Precio (RD$)" class="w-1/3 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                                <input type="number" id="admin-prod-wholesale" min="1" placeholder="P. Mayor (RD$)" class="w-1/3 border border-yellow-300 bg-yellow-50 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta" title="Precio especial para mayoristas">
+                            </div>
+
+                            <div>
+                                <input type="number" id="admin-prod-cost" min="0" placeholder="Costo del producto (RD$) - Opcional, para calcular ganancia" class="w-full border border-green-200 bg-green-50 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-green-500" title="Cuánto te cuesta este producto. Se usa solo para los reportes de ganancia, nunca se muestra al cliente.">
+                            </div>
+                            
+                            <div class="flex items-center gap-4 border border-gray-200 p-3 rounded-lg bg-white shadow-sm mt-2">
+                                <div class="w-1/3 flex flex-col gap-2 justify-center">
+                                    <div class="flex items-center gap-2">
+                                        <input type="checkbox" id="admin-prod-use-inv" onchange="toggleInvInput()" class="w-4 h-4 accent-perfume-magenta cursor-pointer rounded">
+                                        <label for="admin-prod-use-inv" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest cursor-pointer mt-0.5">Controlar Stock</label>
+                                    </div>
+                                    <input type="number" id="admin-prod-stock" min="0" placeholder="Cantidad..." class="hidden w-full border border-gray-300 px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta font-bold">
+                                </div>
+                                <div class="w-2/3 flex items-center gap-4 mt-0 justify-center border-l border-gray-100 pl-4 h-full">
+                                    <div class="flex items-center gap-2">
+                                        <input type="checkbox" id="admin-prod-sale" class="w-5 h-5 accent-perfume-magenta cursor-pointer rounded">
+                                        <label for="admin-prod-sale" class="text-xs font-bold text-red-500 cursor-pointer">🛒 Oferta</label>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <input type="checkbox" id="admin-prod-agotado" class="w-5 h-5 accent-gray-800 cursor-pointer rounded">
+                                        <label for="admin-prod-agotado" class="text-xs font-bold text-gray-800 cursor-pointer">🚫 Agotado</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-lg p-3 bg-white mt-2">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="text-xs font-bold text-gray-600 uppercase">Opciones de Decants (Opcional)</label>
+                                    <button type="button" onclick="addDecantField()" class="text-[10px] font-bold text-gray-700 bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 transition">+ Añadir Decant</button>
+                                </div>
+                                <div id="admin-decants-list" class="space-y-2"></div>
+                            </div>
+
+                            <div>
+                                <textarea id="admin-prod-desc" rows="2" placeholder="Notas olfativas / Descripción del perfume..." class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1 uppercase">Imagen del Perfume</label>
+                                <div class="flex gap-2">
+                                    <input type="url" id="admin-prod-img" required placeholder="URL de la imagen (https://...)" class="flex-1 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                                    <label class="bg-gray-800 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-black transition cursor-pointer flex items-center justify-center shrink-0">
+                                        <span id="upload-img-text">Subir 📁</span>
+                                        <input type="file" id="admin-prod-img-upload" accept="image/*" onchange="uploadToGitHub(event)" class="hidden">
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" id="admin-submit-btn" class="w-full bg-perfume-magenta text-white font-bold py-2 rounded-lg hover:bg-perfume-dark transition shadow-md mt-2">
+                                Guardar Producto
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+                        <h3 class="font-bold text-perfume-dark">📦 Productos en Catálogo</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="exportCatalogPDF('retail')" class="bg-perfume-magenta text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-perfume-dark transition shadow-sm">
+                                📄 PDF (Retail)
+                            </button>
+                            <button onclick="exportCatalogPDF('wholesale')" class="bg-yellow-400 text-gray-900 px-3 py-2 rounded-lg text-xs font-bold hover:bg-yellow-300 transition shadow-sm">
+                                📄 PDF (Wholesale)
+                            </button>
+                            <button id="btn-copy-txt-retail" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-blue-700 transition shadow-sm">
+                                📋 Copiar TXT (Retail)
+                            </button>
+                            <button id="btn-copy-txt-wholesale" class="bg-green-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-green-700 transition shadow-sm">
+                                📋 Copiar TXT (Mayor)
+                            </button>
+                        </div>
+                    </div>
+                    <div class="relative w-full md:w-64">
+                        <div class="relative">
+                            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <input type="text" id="admin-search" oninput="filterAdminProducts()" placeholder="Buscar perfume o SKU..." class="w-full pl-9 border border-gray-300 px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="admin-products-list" class="space-y-3 h-auto pr-2"></div>
+            </div>
+
+            <!-- PESTAÑA: CATEGORÍAS Y MARCAS -->
+            <div id="admin-tab-categories" class="hidden space-y-6 max-w-6xl mx-auto w-full">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-perfume-dark mb-4 border-b border-gray-200 pb-2">🏷️ Gestión de Categorías</h3>
+                        <p class="text-xs text-gray-500 mb-4">Crea géneros o colecciones (Ej. Damas, Caballeros, Unisex, Premium).</p>
+                        
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="new-category-input" placeholder="Nueva categoría..." class="flex-1 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                            <button onclick="addSiteCategory()" class="bg-perfume-magenta text-white font-bold px-4 py-2 rounded-lg hover:bg-perfume-dark transition shadow-sm">Agregar</button>
+                        </div>
+
+                        <div class="bg-white border border-gray-200 rounded-lg p-2 max-h-60 overflow-y-auto no-scrollbar">
+                            <ul id="admin-categories-list" class="divide-y divide-gray-100"></ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-perfume-dark mb-4 border-b border-gray-200 pb-2">✨ Gestión de Marcas</h3>
+                        <p class="text-xs text-gray-500 mb-4">Añade las marcas de tus perfumes para seleccionarlas fácilmente al crear un producto.</p>
+                        
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="new-brand-input" placeholder="Nueva marca..." class="flex-1 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                            <button onclick="addSiteBrand()" class="bg-perfume-dark text-white font-bold px-4 py-2 rounded-lg hover:bg-black transition shadow-sm">Agregar</button>
+                        </div>
+
+                        <div class="bg-white border border-gray-200 rounded-lg p-2 max-h-60 overflow-y-auto no-scrollbar">
+                            <ul id="admin-brands-list" class="divide-y divide-gray-100"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA: CLIENTES -->
+            <div id="admin-tab-clients" class="hidden space-y-6 max-w-6xl mx-auto w-full">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <div>
+                            <h3 class="font-bold text-perfume-dark text-xl">👥 Gestión de Clientes (CRM)</h3>
+                            <p class="text-xs text-gray-500 mt-1">Busca clientes por ID, nombre o correo y asígnalos como Mayoristas VIP.</p>
+                        </div>
+                        <div class="relative w-full md:w-72">
+                            <div class="relative">
+                            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <input type="text" id="admin-search-clients" oninput="window.renderAdminClientsList(this.value)" placeholder="Buscar cliente, email o ID..." class="w-full pl-9 border border-gray-300 px-4 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta shadow-sm">
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div id="admin-clients-list" class="max-h-[60vh] overflow-y-auto pr-2 no-scrollbar">
+                        <p class="text-sm text-gray-500 py-4 text-center">Cargando clientes...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA: CONFIGURACIÓN AVANZADA -->
+            <div id="admin-tab-settings" class="hidden space-y-6 max-w-6xl mx-auto w-full">
+                <form onsubmit="saveSiteConfig(event)" class="space-y-6">
+
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
+                        <h3 class="font-bold text-perfume-dark mb-2 border-b border-gray-200 pb-2 flex items-center gap-2">🚚 Gestión de Agencias de Envío</h3>
+                        <p class="text-sm text-gray-500 mb-4">Administra las agencias disponibles para rastreo de pedidos. Pon solo el link de la página de rastreo de la agencia (sin el número de guía); el número se mostrará aparte para que el cliente lo copie y lo pegue en la web de la agencia.</p>
+
+                        <div id="shipping-agencies-list" class="space-y-3 mb-4"></div>
+
+                        <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">Nombre de la Agencia</label>
+                                <input id="shipping-agency-name" type="text" placeholder="Ej: CaribePack" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-1">URL de Rastreo</label>
+                                <input id="shipping-agency-url" type="url" placeholder="Ej: https://miagencia.com/rastreo" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addShippingAgencyFromForm()" class="mt-3 bg-perfume-magenta text-white px-4 py-2 rounded-lg font-bold hover:bg-perfume-dark transition shadow-sm">Añadir Agencia</button>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200 mb-6">
+                        <h3 class="font-bold text-yellow-900 mb-2 border-b border-yellow-200 pb-2 flex items-center gap-2">💼 Clientes VIP / Mayoristas</h3>
+                        <p class="text-xs text-yellow-800 mb-3">Los correos que agregues aquí verán automáticamente el "Precio x Mayor" en toda la tienda cuando inicien sesión.</p>
+                        <label class="block text-xs font-bold text-yellow-900 mb-1">Correos electrónicos (separados por coma)</label>
+                        <textarea id="cfg-wholesale-emails" rows="2" class="w-full border border-yellow-300 px-3 py-2 rounded-lg text-sm bg-white focus:outline-none focus:border-yellow-500" placeholder="cliente1@gmail.com, revendedor@hotmail.com"></textarea>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-perfume-dark mb-4 border-b border-gray-200 pb-2">🎨 Identidad Visual y Colores</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Logo de la Tienda (URL)</label>
+                                <input type="url" id="cfg-logo-url" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm" placeholder="URL de la imagen del logo (PNG/JPG)">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Color Principal (Botones y Acentos)</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="cfg-color-primary" class="h-10 w-14 rounded cursor-pointer border-none p-0">
+                                    <span class="text-xs text-gray-400">Color que destaca</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Color Secundario (Títulos oscuros)</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="cfg-color-secondary" class="h-10 w-14 rounded cursor-pointer border-none p-0">
+                                    <span class="text-xs text-gray-400">Color oscuro base</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Color Fondo General (Página)</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="cfg-color-bg" class="h-10 w-14 rounded cursor-pointer border-none p-0">
+                                    <span class="text-xs text-gray-400">Fondo de la web</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Tipografía Global</label>
+                                <select id="cfg-font-family" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="font-sans">Moderna — Inter (Recomendada)</option>
+                                    <option value="font-serif">Elegante — Playfair Display</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-perfume-dark mb-4 border-b border-gray-200 pb-2">🖼️ Pantalla Principal (Inicio)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Título Parte 1</label>
+                                <input type="text" id="cfg-hero-t1" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Título Parte 2 (Resaltado)</label>
+                                <input type="text" id="cfg-hero-t2" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Subtítulo Descriptivo</label>
+                                <textarea id="cfg-hero-sub" rows="2" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Texto del Botón Principal</label>
+                                <input type="text" id="cfg-hero-btn" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm" placeholder="Ej: Explorar Colección">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Alineación del Texto (Hero)</label>
+                                <select id="cfg-hero-align" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="text-left">Alineado a la Izquierda</option>
+                                    <option value="text-center">Centrado</option>
+                                    <option value="text-right">Alineado a la Derecha</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Tamaño (Altura) del Inicio</label>
+                                <select id="cfg-hero-height" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="min-h-[50vh]">Pequeño (50% de la pantalla)</option>
+                                    <option value="min-h-[70vh]">Mediano (70% - Recomendado)</option>
+                                    <option value="min-h-screen">Pantalla Completa (100%)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-300 p-4 rounded-lg bg-white mt-2">
+                            <label class="block text-sm text-perfume-dark font-bold mb-3">Contenido Multimedia (Foto o Video)</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs text-gray-500 font-bold mb-1">Tipo de contenido</label>
+                                    <select id="cfg-media-type" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm">
+                                        <option value="image">Imagen / GIF</option>
+                                        <option value="video">Video (MP4, WebM)</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs text-gray-500 font-bold mb-1">Enlace (URL directa)</label>
+                                    <input type="url" id="cfg-hero-img" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta" placeholder="URL de la imagen o video">
+                                    <p class="text-[10px] text-gray-400 mt-1">⚠️ Si eliges Video, el enlace debe apuntar DIRECTAMENTE a un archivo .mp4 o .webm (no a una página como YouTube, Google Drive o Dropbox), o no se reproducirá.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-perfume-dark mb-4 border-b border-gray-200 pb-2">🛍️ Diseño de Catálogo y Tarjetas</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="lg:col-span-3">
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Título del Catálogo</label>
+                                <input type="text" id="cfg-catalog-title" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm" placeholder="Ej: Colección Exclusiva">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Columnas en Computadora</label>
+                                <select id="cfg-grid-cols" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="lg:grid-cols-3">3 Productos por fila</option>
+                                    <option value="lg:grid-cols-4">4 Productos por fila (Default)</option>
+                                    <option value="lg:grid-cols-5">5 Productos por fila (Pequeños)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Bordes de las Tarjetas</label>
+                                <select id="cfg-card-border" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="border border-gray-100">Borde Fino (Gris)</option>
+                                    <option value="border-none">Sin Borde (Limpio)</option>
+                                    <option value="border-2 border-perfume-magenta">Borde Grueso (Color Principal)</option>
+                                    <option value="border-2 border-perfume-dark">Borde Grueso (Color Secundario)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Redondeo de las Tarjetas</label>
+                                <select id="cfg-card-radius" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="rounded-none">Cuadradas (Sin redondeo)</option>
+                                    <option value="rounded-lg">Ligeramente Redondas</option>
+                                    <option value="rounded-2xl">Redondeadas (Default)</option>
+                                    <option value="rounded-3xl">Muy Redondas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Sombra de las Tarjetas</label>
+                                <select id="cfg-card-shadow" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="shadow-none">Sin sombra</option>
+                                    <option value="shadow-sm">Sombra suave (Default)</option>
+                                    <option value="shadow-lg">Sombra fuerte</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Ajuste de la Imagen</label>
+                                <select id="cfg-img-fit" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="object-contain">Contener (Mostrar completa)</option>
+                                    <option value="object-cover">Cubrir (Llenar espacio sin bordes blancos)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Tamaño del Precio</label>
+                                <select id="cfg-price-size" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="text-base md:text-lg">Normal</option>
+                                    <option value="text-lg md:text-xl">Grande</option>
+                                    <option value="text-xl md:text-2xl">Muy Grande</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-perfume-dark mb-4 border-b border-gray-200 pb-2">📱 Contacto, Redes y Cabecera/Pie</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Color Fondo Encabezado (Arriba)</label>
+                                <input type="color" id="cfg-header-bg" class="h-10 w-14 rounded cursor-pointer border-none p-0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Color Fondo Pie de Página (Abajo)</label>
+                                <input type="color" id="cfg-footer-bg" class="h-10 w-14 rounded cursor-pointer border-none p-0">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Correo Electrónico</label>
+                                <input type="text" id="cfg-footer-email" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Teléfono (WhatsApp Tienda)</label>
+                                <input type="text" id="cfg-footer-phone" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm" placeholder="Ej: 849-516-1973">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-bold mb-1">Ubicación física</label>
+                                <input type="text" id="cfg-footer-address" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border border-gray-200 p-4 bg-white rounded-lg mb-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-800 mb-1">Enlace Instagram</label>
+                                <input type="url" id="cfg-social-ig" class="w-full border border-gray-300 px-3 py-1.5 rounded-lg text-sm" placeholder="https://instagram.com/...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-blue-600 mb-1">Enlace Facebook</label>
+                                <input type="url" id="cfg-social-fb" class="w-full border border-gray-300 px-3 py-1.5 rounded-lg text-sm" placeholder="https://facebook.com/...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-black mb-1">Enlace TikTok</label>
+                                <input type="url" id="cfg-social-tt" class="w-full border border-gray-300 px-3 py-1.5 rounded-lg text-sm" placeholder="https://tiktok.com/@...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-[#25D366] mb-1">Enlace WhatsApp</label>
+                                <input type="url" id="cfg-social-wa" class="w-full border border-gray-300 px-3 py-1.5 rounded-lg text-sm" placeholder="https://wa.me/...">
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 p-4 bg-white rounded-lg flex flex-col md:flex-row gap-4 items-center">
+                            <div class="flex items-center gap-2 w-full md:w-1/3">
+                                <input type="checkbox" id="cfg-show-wa-btn" class="w-5 h-5 accent-perfume-magenta cursor-pointer rounded">
+                                <label for="cfg-show-wa-btn" class="text-sm font-bold text-gray-700 cursor-pointer">Mostrar Botón Flotante de WhatsApp</label>
+                            </div>
+                            <div class="w-full md:w-2/3 flex items-center gap-2">
+                                <label class="text-xs font-bold text-gray-500 whitespace-nowrap">Posición en pantalla:</label>
+                                <select id="cfg-wa-btn-pos" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm bg-white">
+                                    <option value="right-6">Abajo a la Derecha</option>
+                                    <option value="left-6">Abajo a la Izquierda</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                        <h3 class="font-bold text-blue-900 mb-4 border-b border-blue-200 pb-2">🎯 Ventana Promocional (Pop-up)</h3>
+                        <p class="text-xs text-blue-800 mb-4">Muestra una imagen promocional emergente 2 segundos después de que los clientes carguen la página. Haz clic en la imagen para ir al enlace.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs text-blue-900 font-bold mb-1">URL de la Imagen Promocional</label>
+                                <input type="url" id="cfg-promo-img" class="w-full border border-blue-300 px-3 py-2 rounded-lg text-sm bg-white focus:outline-none focus:border-blue-500" placeholder="https://example.com/promo.jpg">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-blue-900 font-bold mb-1">Enlace de Destino (Click en la imagen)</label>
+                                <input type="url" id="cfg-promo-link" class="w-full border border-blue-300 px-3 py-2 rounded-lg text-sm bg-white focus:outline-none focus:border-blue-500" placeholder="https://example.com/oferta">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-blue-900 font-bold mb-2">Estado</label>
+                            <select id="cfg-promo-active" class="w-full border border-blue-300 px-3 py-2 rounded-lg text-sm bg-white focus:outline-none focus:border-blue-500">
+                                <option value="true">✅ Activo (Mostrar Pop-up)</option>
+                                <option value="false">❌ Inactivo (Ocultar)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-perfume-dark mb-2 border-b border-gray-200 pb-2">☁️ Almacenamiento (GitHub)</h3>
+                        <p class="text-[10px] text-gray-500 mb-3">Para poder subir imágenes directamente desde tu PC/Móvil, debes ingresar tu repositorio de Github y tu Token de Acceso Personal (PAT).</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Repositorio (Usuario/Repo)</label>
+                                <input type="text" id="cfg-gh-repo" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm" placeholder="ej: famlyfragrancerd-byte/famlyfragrancerd-web">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Token de GitHub (PAT)</label>
+                                <input type="password" id="cfg-gh-token" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxx">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-save-cfg" class="w-full bg-perfume-dark text-white font-bold py-4 rounded-xl hover:bg-black transition mt-6 shadow-lg text-lg">
+                        ✅ Aplicar y Ver Cambios en la Tienda
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE ESCÁNER DE CÓDIGO DE BARRAS -->
+    <div id="barcode-scanner-modal" class="fixed inset-0 bg-black/90 z-[300] hidden flex-col justify-center items-center backdrop-blur-sm">
+        <div class="bg-white p-4 rounded-2xl shadow-2xl w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-gray-800">📷 Escanear Código</h3>
+                <button onclick="closeScannerModal()" class="text-gray-500 hover:text-red-500 font-bold px-2 py-1 bg-gray-100 rounded">Cerrar</button>
+            </div>
+            <div id="scanner-reader" class="w-full overflow-hidden rounded-lg bg-black min-h-[300px]"></div>
+            <p class="text-xs text-gray-500 text-center mt-3">Apunta la cámara al código de barras del producto.</p>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIGURAR ESTADOS -->
+    <div id="status-settings-modal" class="fixed inset-0 bg-black/60 z-[300] hidden flex-col justify-center items-center opacity-0 transition-opacity duration-300 backdrop-blur-sm p-4">
+        <div class="bg-white p-5 rounded-2xl shadow-2xl w-full max-w-lg transform scale-95 transition-transform duration-300 max-h-[90vh] flex flex-col" id="status-settings-box">
+            <h3 class="text-xl font-bold text-perfume-dark mb-1 shrink-0">⚙️ Personalizar Estados</h3>
+            <p class="text-xs text-gray-500 mb-4 shrink-0">Modifica el nombre y el mensaje de WhatsApp que se envía al cliente en cada estado.</p>
+            
+            <div class="space-y-4 mb-4 overflow-y-auto pr-2 no-scrollbar flex-1">
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <label class="block text-[10px] font-bold text-gray-700 uppercase mb-2 tracking-widest border-b border-gray-200 pb-1">🟡 Estado: Recibido</label>
+                    <input type="text" id="status-name-recibido" placeholder="Nombre (Ej: Recibido)" class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-sm focus:border-perfume-magenta focus:outline-none mb-2 font-bold text-perfume-dark">
+                    <textarea id="status-msg-recibido" rows="2" placeholder="Mensaje de WhatsApp para el cliente..." class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-xs focus:border-perfume-magenta focus:outline-none text-gray-600"></textarea>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <label class="block text-[10px] font-bold text-gray-700 uppercase mb-2 tracking-widest border-b border-gray-200 pb-1">🔵 Estado: Procesando</label>
+                    <input type="text" id="status-name-procesando" placeholder="Nombre (Ej: Empacando)" class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-sm focus:border-perfume-magenta focus:outline-none mb-2 font-bold text-perfume-dark">
+                    <textarea id="status-msg-procesando" rows="2" placeholder="Mensaje de WhatsApp para el cliente..." class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-xs focus:border-perfume-magenta focus:outline-none text-gray-600"></textarea>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <label class="block text-[10px] font-bold text-gray-700 uppercase mb-2 tracking-widest border-b border-gray-200 pb-1">🚚 Estado: Enviado</label>
+                    <input type="text" id="status-name-enviado" placeholder="Nombre (Ej: En Camino)" class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-sm focus:border-perfume-magenta focus:outline-none mb-2 font-bold text-perfume-dark">
+                    <textarea id="status-msg-enviado" rows="2" placeholder="Mensaje de WhatsApp para el cliente..." class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-xs focus:border-perfume-magenta focus:outline-none text-gray-600"></textarea>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <label class="block text-[10px] font-bold text-gray-700 uppercase mb-2 tracking-widest border-b border-gray-200 pb-1">🟢 Estado: Completado</label>
+                    <input type="text" id="status-name-completado" placeholder="Nombre (Ej: Entregado)" class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-sm focus:border-perfume-magenta focus:outline-none mb-2 font-bold text-perfume-dark">
+                    <textarea id="status-msg-completado" rows="2" placeholder="Mensaje de WhatsApp para el cliente..." class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-xs focus:border-perfume-magenta focus:outline-none text-gray-600"></textarea>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <label class="block text-[10px] font-bold text-gray-700 uppercase mb-2 tracking-widest border-b border-gray-200 pb-1">🔴 Estado: Cancelado</label>
+                    <input type="text" id="status-name-cancelado" placeholder="Nombre (Ej: Rechazado)" class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-sm focus:border-perfume-magenta focus:outline-none mb-2 font-bold text-perfume-dark">
+                    <textarea id="status-msg-cancelado" rows="2" placeholder="Mensaje de WhatsApp para el cliente..." class="w-full border border-gray-300 px-3 py-1.5 rounded-md text-xs focus:border-perfume-magenta focus:outline-none text-gray-600"></textarea>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 shrink-0 pt-2 border-t border-gray-100">
+                <button onclick="closeStatusSettings()" class="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold hover:bg-gray-200 transition">Cancelar</button>
+                <button onclick="saveStatusSettings()" class="flex-1 bg-perfume-magenta text-white py-2.5 rounded-xl font-bold hover:bg-perfume-dark transition shadow-md">Guardar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD DE PEDIDOS -->
+    <div id="orders-dashboard-modal" class="fixed inset-0 bg-gray-100 z-[250] flex-col transition-opacity duration-300 opacity-0" style="display:none">
+        <div class="bg-white border-b border-gray-200 px-4 md:px-8 pt-4 pb-0 shadow-sm flex flex-col">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <h2 class="text-2xl font-extrabold text-perfume-dark flex items-center gap-2.5">
+                        <span class="bg-perfume-magenta text-white p-1.5 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        </span>
+                        Monitor de Pedidos
+                    </h2>
+                    <span class="bg-perfume-magenta text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wide">En Vivo</span>
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <div class="relative flex-1 md:w-72">
+                        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" id="admin-search-orders" oninput="filterAdminOrders()" placeholder="Buscar ID (#PED...) o Nombre" class="w-full pl-9 border border-gray-300 px-4 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                    </div>
+                    <button onclick="loadAdminOrders()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 p-2 md:px-4 md:py-2 rounded-lg text-sm font-bold transition flex items-center justify-center" title="Actualizar Datos">
+                        <span class="md:hidden">🔄</span><span class="hidden md:inline">🔄 Actualizar</span>
+                    </button>
+                    <button onclick="openStatusSettings()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 p-2 md:px-3 md:py-2 rounded-lg text-sm font-bold transition flex items-center justify-center ml-2" title="Personalizar Nombres de Estados">
+                        ⚙️
+                    </button>
+                    <button onclick="closeOrdersDashboard()" class="text-gray-400 hover:text-red-500 text-3xl leading-none ml-2" title="Cerrar Monitor">&times;</button>
+                </div>
+            </div>
+            <div class="flex gap-6 overflow-x-auto no-scrollbar">
+                <button onclick="setOrderTab('Pendientes')" id="tab-orders-pendientes" class="text-xs md:text-sm font-bold text-perfume-magenta border-b-2 border-perfume-magenta pb-3 uppercase tracking-wide whitespace-nowrap">⏳ Pendientes</button>
+                <button onclick="setOrderTab('Atendiendo')" id="tab-orders-atendiendo" class="text-xs md:text-sm font-bold text-gray-400 pb-3 hover:text-gray-600 transition uppercase tracking-wide whitespace-nowrap">👋 Atendiendo</button>
+                <button onclick="setOrderTab('Cerrados')" id="tab-orders-cerrados" class="text-xs md:text-sm font-bold text-gray-400 pb-3 hover:text-gray-600 transition uppercase tracking-wide whitespace-nowrap">✅ Cerrados</button>
+                <button onclick="setOrderTab('Todos')" id="tab-orders-todos" class="text-xs md:text-sm font-bold text-gray-400 pb-3 hover:text-gray-600 transition uppercase tracking-wide whitespace-nowrap">📋 Todos</button>
+                <button onclick="setOrderTab('Eliminados')" id="tab-orders-eliminados" class="text-xs md:text-sm font-bold text-red-400 hover:text-red-500 pb-3 transition uppercase tracking-wide whitespace-nowrap">🗑️ Eliminados</button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div id="admin-orders-list" class="space-y-2 px-4 pb-6"></div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD DE FACTURACIÓN E INVENTARIO -->
+    <div id="billing-modal" class="fixed inset-0 bg-gray-100 z-[250] flex-col transition-opacity duration-300 opacity-0" style="display:none">
+        <div class="bg-white border-b border-gray-200 px-4 md:px-8 pt-4 pb-0 shadow-sm flex flex-col shrink-0">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-extrabold text-perfume-dark flex items-center gap-2.5">
+                    <span class="bg-green-700 text-white p-1.5 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </span>
+                    Facturación e Inventario
+                </h2>
+                <button onclick="closeBillingModal()" class="text-gray-400 hover:text-red-500 text-3xl leading-none" title="Cerrar">&times;</button>
+            </div>
+
+            <div class="flex gap-6 overflow-x-auto no-scrollbar">
+                <button onclick="switchBillingSubTab('invoice')" id="billing-subtab-btn-invoice" class="text-xs md:text-sm font-bold text-perfume-magenta border-b-2 border-perfume-magenta pb-3 uppercase tracking-wide whitespace-nowrap">🧾 Nueva Factura</button>
+                <button onclick="switchBillingSubTab('inventory')" id="billing-subtab-btn-inventory" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap">📦 Inventario</button>
+                <button onclick="switchBillingSubTab('movements')" id="billing-subtab-btn-movements" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap">🔄 Movimientos</button>
+                <button onclick="switchBillingSubTab('history')" id="billing-subtab-btn-history" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap">🗂️ Historial</button>
+                <button onclick="switchBillingSubTab('reports')" id="billing-subtab-btn-reports" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap">📊 Reportes</button>
+                <button onclick="switchBillingSubTab('settings')" id="billing-subtab-btn-settings" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap">⚙️ Datos de Factura</button>
+                <button onclick="switchBillingSubTab('printer')" id="billing-subtab-btn-printer" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap">🖨️ Impresora</button>
+                <button onclick="switchBillingSubTab('clients')" id="billing-subtab-btn-clients" class="text-xs md:text-sm font-bold text-gray-500 pb-3 hover:text-gray-700 transition uppercase tracking-wide whitespace-nowrap">👥 Clientes</button>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-hidden min-h-0 flex flex-col">
+
+            <!-- SUBPESTAÑA: NUEVA FACTURA — Estilo Eleventa -->
+            <div id="billing-subtab-invoice" class="flex-1 min-h-0 w-full flex flex-col bg-gray-100">
+
+                <!-- BARRA SUPERIOR: código + buscar + acciones rápidas -->
+                <div class="bg-white border-b-2 border-gray-300 shrink-0">
+                    <!-- Fila 1: Ticket header + input de código -->
+                    <div class="flex items-center gap-2 px-3 py-2 border-b border-gray-200">
+                        <div id="billing-selected-order-badge" class="hidden items-center gap-1.5 bg-blue-100 text-blue-700 text-[10px] font-extrabold px-2 py-1 rounded border border-blue-300 shrink-0 uppercase tracking-wide">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                            <span id="billing-selected-order-label">Pedido</span>
+                            <button onclick="window.clearBillingSelection()" class="text-blue-400 hover:text-red-500 ml-0.5 font-bold">✕</button>
+                        </div>
+                        <div class="relative flex-1">
+                            <input type="text" id="billing-code-input"
+                                oninput="window.billingSearchLive(this.value)"
+                                onkeydown="if(event.key==='Enter') window.billingAddByCode(this.value)"
+                                placeholder="Código, nombre o marca..."
+                                autocomplete="off"
+                                class="w-full border-2 border-blue-400 rounded-lg px-3 py-2.5 text-sm font-medium focus:outline-none focus:border-blue-600 bg-blue-50">
+                            <div id="billing-suggestions-drop" class="hidden absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-lg shadow-xl z-50 max-h-64 overflow-y-auto"></div>
+                        </div>
+                        <button onclick="window.billingAddByCode(document.getElementById('billing-code-input').value)"
+                            class="shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2.5 rounded-lg transition flex items-center gap-1 whitespace-nowrap">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                            <span class="hidden sm:inline">Agregar</span>
+                        </button>
+                        <button type="button" onclick="openScannerModal('billing')"
+                            class="shrink-0 bg-gray-800 hover:bg-black text-white px-3 py-2.5 rounded-lg transition flex items-center justify-center" title="Escanear">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 3h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        </button>
+                    </div>
+
+                    <!-- Fila 2: Cliente + acciones -->
+                    <div class="flex items-center gap-2 px-3 py-1.5 overflow-x-auto no-scrollbar relative" id="billing-actions-row">
+                        <div class="relative shrink-0">
+                            <svg class="w-3 h-3 absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <input type="text" id="billing-customer-name" placeholder="Cliente (opcional)" autocomplete="off"
+                                oninput="window.billingCustomerSearchLive(this.value)"
+                                onfocus="window.billingCustomerSearchLive(this.value)"
+                                onblur="setTimeout(() => window.hideCrmSuggestions(), 150)"
+                                class="pl-6 pr-2 py-1.5 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-blue-400 w-32 sm:w-44">
+                            <div id="billing-customer-suggestions" class="hidden absolute top-full left-0 w-64 bg-white border border-gray-300 rounded-b-lg shadow-xl z-50 max-h-56 overflow-y-auto"></div>
+                        </div>
+                        <input type="email" id="billing-customer-email" placeholder="Correo (opcional, para enviar factura)" autocomplete="off"
+                            class="shrink-0 border border-gray-300 rounded-lg text-xs px-2 py-1.5 focus:outline-none focus:border-blue-400 w-36 sm:w-48">
+                        <button onclick="window.openAddCustomerModal()" class="shrink-0 flex items-center gap-1 border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1.5 rounded-lg transition whitespace-nowrap" title="Añadir nuevo cliente">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                            <span class="hidden sm:inline">Cliente</span>
+                        </button>
+                        <button onclick="window.toggleBillingOrdersDrawer()" class="shrink-0 flex items-center gap-1 border border-gray-300 bg-gray-50 hover:bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            Pendientes <span class="bg-blue-600 text-white text-[9px] px-1.5 py-0.5 rounded-full ml-0.5" id="billing-pending-count">0</span>
+                        </button>
+                        <button onclick="window.openBillingAddProduct()" class="shrink-0 flex items-center gap-1 border border-green-300 bg-green-50 hover:bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                            Nuevo Producto
+                        </button>
+                        <button onclick="window.clearBillingSelection()" class="shrink-0 flex items-center gap-1 border border-red-200 bg-red-50 hover:bg-red-100 text-red-500 text-xs font-bold px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            Limpiar
+                        </button>
+                        <!-- Drawer de pedidos pendientes — fuera del contenedor overflow para no quedar recortado -->
+                        <div id="billing-orders-drawer" class="hidden fixed z-[300] bg-white border border-gray-300 shadow-2xl rounded-xl max-h-80 overflow-y-auto p-2 space-y-1.5" style="top:110px; left:50%; transform:translateX(-50%); width:min(360px, calc(100vw - 2rem))">
+                            <div class="sticky top-0 bg-white pb-1 mb-1 border-b border-gray-100 flex justify-between items-center">
+                                <span class="text-[10px] font-extrabold text-gray-500 uppercase tracking-wider">Pedidos en Proceso</span>
+                                <button onclick="document.getElementById('billing-orders-drawer').classList.add('hidden')" class="text-gray-400 hover:text-red-500 text-lg font-bold leading-none px-1">×</button>
+                            </div>
+                            <div id="billing-orders-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA DE ARTÍCULOS — Desktop: tabla completa | Mobile: tarjetas apiladas -->
+                <div class="flex-1 overflow-auto min-h-0">
+
+                    <!-- DESKTOP: tabla normal (oculta en móvil) -->
+                    <table class="w-full text-sm border-collapse hidden md:table" style="min-width:520px">
+                        <thead class="sticky top-0 bg-gray-200 z-10">
+                            <tr class="text-left text-[11px] font-extrabold text-gray-600 uppercase tracking-wide">
+                                <th class="px-3 py-2.5 border-b border-gray-300 w-8 text-center">#</th>
+                                <th class="px-3 py-2.5 border-b border-gray-300">Descripción del Producto</th>
+                                <th class="px-3 py-2.5 border-b border-gray-300 text-right w-28">Precio</th>
+                                <th class="px-3 py-2.5 border-b border-gray-300 text-center w-28">Cant.</th>
+                                <th class="px-3 py-2.5 border-b border-gray-300 text-right w-32">Importe</th>
+                                <th class="px-3 py-2.5 border-b border-gray-300 text-center w-20">Stock</th>
+                                <th class="px-3 py-2.5 border-b border-gray-300 text-right w-28">Desc. RD$</th>
+                                <th class="px-2 py-2.5 border-b border-gray-300 w-8"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="billing-items-list">
+                            <tr id="billing-empty-row">
+                                <td colspan="8" class="text-center text-gray-400 text-sm py-16">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <svg class="w-10 h-10 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                        <span class="font-medium">Escanea un código o busca un producto para comenzar</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- MÓVIL: tarjetas apiladas (ocultas en desktop) -->
+                    <div id="billing-items-mobile" class="md:hidden divide-y divide-gray-100">
+                        <div class="flex flex-col items-center justify-center text-gray-400 py-14 gap-2">
+                            <svg class="w-10 h-10 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                            <span class="text-sm font-medium text-center px-4">Escribe o escanea un producto para comenzar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BARRA INFERIOR FIJA: Totales + Pago + COBRAR -->
+                <!-- En móvil se apila verticalmente; en desktop queda horizontal -->
+                <div class="bg-white border-t-2 border-gray-300 shrink-0">
+
+                    <!-- FILA SUPERIOR: solo descuento (el método de pago ahora vive en el modal de Cobrar) -->
+                    <div class="flex items-center gap-2 px-3 pt-2 pb-1 flex-wrap">
+                        <div class="flex items-center gap-1 ml-auto shrink-0">
+                            <span class="text-[10px] text-gray-400 font-bold">Desc.:</span>
+                            <span class="text-[10px] text-gray-400">RD$</span>
+                            <input type="number" id="billing-discount" value="0" min="0" oninput="window.renderBillingItems()" class="w-16 border border-gray-300 rounded-lg text-right text-xs font-bold px-1.5 py-1.5 focus:outline-none focus:border-blue-400">
+                            <span class="text-[10px] text-gray-400">%</span>
+                            <input type="number" id="billing-discount-pct" value="0" min="0" max="100" oninput="window.applyBillingDiscountPct()" class="w-12 border border-gray-300 rounded-lg text-right text-xs font-bold px-1.5 py-1.5 focus:outline-none focus:border-blue-400">
+                        </div>
+                    </div>
+
+                    <!-- FILA INFERIOR: Total + COBRAR (abre el modal con las opciones) -->
+                    <div class="flex items-stretch gap-0 divide-x divide-gray-200 pb-1">
+
+                        <!-- Total -->
+                        <div class="flex flex-col justify-center px-3 py-1 shrink-0 flex-1">
+                            <span class="text-[10px] text-gray-400 font-bold uppercase leading-none">Total:</span>
+                            <span id="billing-total" class="text-xl sm:text-2xl font-extrabold text-gray-900 leading-tight">RD$ 0.00</span>
+                            <span id="billing-subtotal-display" class="text-[9px] text-gray-400 hidden"></span>
+                            <span id="billing-discount-display" class="text-[9px] text-red-500 font-bold hidden"></span>
+                        </div>
+
+                        <!-- COBRAR -->
+                        <div class="flex items-stretch ml-auto shrink-0">
+                            <button onclick="window.openCobrarModal()"
+                                class="bg-green-600 hover:bg-green-700 active:scale-95 text-white font-extrabold px-6 sm:px-10 flex flex-col items-center justify-center leading-tight transition shadow-lg h-full min-w-[80px]">
+                                <span class="text-[9px] opacity-70 font-bold tracking-widest hidden sm:block">F12</span>
+                                <span class="text-xl sm:text-2xl font-extrabold tracking-wide">COBRAR</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: COBRAR (estilo Eleventa) -->
+            <div id="billing-cobrar-modal" class="hidden fixed inset-0 bg-gray-900/60 z-[290] justify-center items-center p-4 backdrop-blur-sm" onclick="if(event.target.id === 'billing-cobrar-modal') window.closeCobrarModal()">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden grid grid-cols-1 md:grid-cols-[1fr_260px]">
+
+                    <!-- COLUMNA IZQUIERDA: total + método de pago + pagó con/cambio -->
+                    <div class="p-6 md:p-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-extrabold text-gray-800 uppercase tracking-wide">Cobrar</h2>
+                            <button onclick="window.closeCobrarModal()" class="text-gray-400 hover:text-red-500 text-2xl leading-none">&times;</button>
+                        </div>
+
+                        <div class="text-center mb-6">
+                            <span id="cobrar-modal-total" class="text-5xl font-extrabold text-blue-700">RD$ 0.00</span>
+                        </div>
+
+                        <div class="grid grid-cols-5 gap-2 mb-3">
+                            <button type="button" onclick="window.setBillingPaymentMethod('Efectivo')" id="billing-pay-btn-efectivo" class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition">
+                                <span class="text-2xl">💵</span><span class="text-[11px] font-bold">Efectivo</span>
+                            </button>
+                            <button type="button" onclick="window.setBillingPaymentMethod('Tarjeta')" id="billing-pay-btn-tarjeta" class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition">
+                                <span class="text-2xl">💳</span><span class="text-[11px] font-bold">Tarjeta</span>
+                            </button>
+                            <button type="button" onclick="window.setBillingPaymentMethod('Transferencia')" id="billing-pay-btn-transferencia" class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition">
+                                <span class="text-2xl">🏦</span><span class="text-[11px] font-bold">Transfer.</span>
+                            </button>
+                            <button type="button" onclick="window.setBillingPaymentMethod('Mixto')" id="billing-pay-btn-mixto" class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition">
+                                <span class="text-2xl">🔀</span><span class="text-[11px] font-bold">Mixto</span>
+                            </button>
+                            <button type="button" onclick="window.setBillingPaymentMethod('Credito')" id="billing-pay-btn-credito" class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition">
+                                <span class="text-2xl">🧑</span><span class="text-[11px] font-bold">Crédito</span>
+                            </button>
+                        </div>
+                        <p id="billing-credit-warning" class="hidden text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1.5 mb-3"></p>
+
+                        <input type="text" id="billing-payment-entity" placeholder="Entidad bancaria..." class="hidden w-full mb-4 border border-gray-300 rounded-lg text-sm px-3 py-2 focus:outline-none focus:border-blue-400">
+
+                        <div id="billing-cash-calculator" class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-bold text-gray-600">Pagó Con:</label>
+                                <input type="number" id="billing-cash-received" placeholder="0.00" min="0" oninput="window.calcChange()"
+                                    class="w-36 border-2 border-gray-300 rounded-lg text-right text-lg font-bold px-3 py-2 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-bold text-gray-600">Su Cambio:</label>
+                                <span id="billing-change-display" class="text-lg font-extrabold text-green-600">RD$ 0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMNA DERECHA: acciones -->
+                    <div class="bg-gray-50 border-t md:border-t-0 md:border-l border-gray-200 p-5 flex flex-col gap-2.5">
+                        <button onclick="window.generateManualInvoice(true)" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                            🖨️ <span>F1 - Cobrar e Imprimir</span>
+                        </button>
+                        <button onclick="window.generateManualInvoice(false)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                            <span>F2 - Cobrar sin Imprimir</span>
+                        </button>
+                        <button onclick="window.closeCobrarModal()" class="border border-gray-300 hover:border-red-400 text-gray-600 hover:text-red-500 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                            <span>ESC - Cancelar</span>
+                        </button>
+                        <div class="flex-1"></div>
+                        <div class="text-center border-t border-gray-200 pt-3">
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wide">Total de Artículos</p>
+                            <p id="cobrar-modal-article-count" class="text-2xl font-extrabold text-gray-700">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="billing-subtab-inventory" class="hidden flex-1 overflow-y-auto p-4 md:p-8 space-y-6 max-w-6xl mx-auto w-full">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-xs text-gray-500 font-bold uppercase">💰 Valor Total en Inventario</p>
+                        <p id="inventory-total-value" class="text-2xl font-extrabold text-perfume-dark mt-1">RD$ 0</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Suma de (stock × precio) de los productos con inventario controlado.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-xs text-gray-500 font-bold uppercase">📦 Unidades en Stock</p>
+                        <p id="inventory-total-units" class="text-2xl font-extrabold text-perfume-dark mt-1">0</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-xs text-gray-500 font-bold uppercase">🚫 Productos Agotados</p>
+                        <p id="inventory-total-agotados" class="text-2xl font-extrabold text-red-600 mt-1">0</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-3 mb-3">
+                        <h3 class="font-bold text-amber-700 flex items-center gap-2">⚠️ Alerta de Stock Bajo</h3>
+                        <div class="flex items-center gap-2 text-xs text-gray-500">
+                            <span>Avisar cuando el stock sea ≤</span>
+                            <input type="number" id="low-stock-threshold" min="0" onchange="window.renderInventoryTable(document.getElementById('inventory-search').value)" class="w-14 border border-gray-300 px-2 py-1 rounded-lg text-center font-bold">
+                        </div>
+                    </div>
+                    <div id="low-stock-list" class="space-y-1.5"></div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-3 mb-3">
+                        <h3 class="font-bold text-perfume-dark">📋 Detalle de Inventario</h3>
+                        <input type="text" id="inventory-search" oninput="window.renderInventoryTable(this.value)" placeholder="🔍 Buscar producto..." class="w-full md:w-64 border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left text-[10px] text-gray-400 uppercase border-b border-gray-100">
+                                    <th class="py-2 pr-2">Producto</th>
+                                    <th class="py-2 pr-2 text-center">Stock</th>
+                                    <th class="py-2 pr-2 text-right">Precio</th>
+                                    <th class="py-2 pr-2 text-right">Valor en Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPESTAÑA: MOVIMIENTOS DE INVENTARIO -->
+            <div id="billing-subtab-movements" class="hidden flex-1 overflow-y-auto p-4 md:p-8 max-w-4xl mx-auto w-full space-y-6">
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-perfume-dark mb-1 flex items-center gap-2">🔄 Registrar Movimiento de Inventario</h3>
+                    <p class="text-[11px] text-gray-500 mb-4">Usa esto para entradas de mercancía nueva, ajustes por conteo físico, devoluciones o pérdidas. Cada movimiento queda registrado con fecha y responsable.</p>
+
+                    <div class="mb-4 relative">
+                        <label class="block text-xs font-bold text-gray-500 mb-1">Producto</label>
+                        <input type="text" id="movement-product-search" oninput="window.filterMovementProductSearch(this.value)" placeholder="Buscar producto con inventario controlado..." class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                        <div id="movement-product-suggestions" class="hidden absolute z-30 bg-white border border-gray-200 rounded-lg shadow-lg w-full mt-1 max-h-64 overflow-y-auto"></div>
+                        <div id="movement-selected-product" class="hidden mt-2 bg-perfume-light/40 border border-perfume-magenta/20 rounded-lg p-2 text-xs font-bold text-perfume-dark"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-1">Tipo de Movimiento</label>
+                            <select id="movement-type" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                                <option value="Entrada">➕ Entrada (Reabastecimiento)</option>
+                                <option value="Ajuste">⚖️ Ajuste por conteo</option>
+                                <option value="Devolución">↩️ Devolución de cliente</option>
+                                <option value="Pérdida">⚠️ Pérdida / Dañado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-1">Cantidad (+/-)</label>
+                            <input type="number" id="movement-qty" placeholder="Ej: 10 o -2" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 mb-1">Nota (Opcional)</label>
+                        <input type="text" id="movement-note" placeholder="Ej: Compra a proveedor X, factura #123" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                    </div>
+
+                    <button onclick="window.saveInventoryMovement()" class="w-full bg-perfume-magenta text-white py-3 rounded-xl font-bold hover:bg-perfume-dark transition shadow-md">✅ Registrar Movimiento</button>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-perfume-dark mb-3">📜 Movimientos Recientes</h3>
+                    <div id="movements-history-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+                        <p class="text-xs text-gray-400 text-center py-6">Cargando movimientos...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPESTAÑA: HISTORIAL DE FACTURAS -->
+            <div id="billing-subtab-history" class="hidden flex-1 overflow-y-auto p-4 md:p-8 max-w-5xl mx-auto w-full space-y-4">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <input type="text" id="invoice-history-search" oninput="window.renderInvoiceHistory(this.value)" placeholder="🔍 Buscar por cliente o número de orden..." class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-perfume-magenta">
+                </div>
+                <div id="invoice-history-list" class="space-y-2"></div>
+            </div>
+
+            <!-- SUBPESTAÑA: REPORTES -->
+            <div id="billing-subtab-reports" class="hidden flex-1 overflow-y-auto p-4 md:p-8 max-w-5xl mx-auto w-full space-y-6">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-wrap gap-2 items-center">
+                    <span class="text-xs font-bold text-gray-500 mr-1">Período:</span>
+                    <button onclick="window.setReportRange('today')" id="report-range-btn-today" class="px-3 py-1.5 rounded-lg border text-xs font-bold transition">Hoy</button>
+                    <button onclick="window.setReportRange('week')" id="report-range-btn-week" class="px-3 py-1.5 rounded-lg border text-xs font-bold transition">Esta Semana</button>
+                    <button onclick="window.setReportRange('month')" id="report-range-btn-month" class="px-3 py-1.5 rounded-lg border text-xs font-bold transition">Este Mes</button>
+                    <button onclick="window.setReportRange('all')" id="report-range-btn-all" class="px-3 py-1.5 rounded-lg border text-xs font-bold transition">Todo</button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-xs text-gray-500 font-bold uppercase">💰 Ventas Totales</p>
+                        <p id="report-total-sales" class="text-2xl font-extrabold text-perfume-dark mt-1">RD$ 0</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-xs text-gray-500 font-bold uppercase">🧾 Facturas</p>
+                        <p id="report-total-orders" class="text-2xl font-extrabold text-perfume-dark mt-1">0</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <p class="text-xs text-gray-500 font-bold uppercase">📈 Ganancia Estimada</p>
+                        <p id="report-total-profit" class="text-2xl font-extrabold text-green-600 mt-1">RD$ 0</p>
+                        <p class="text-[10px] text-gray-400 mt-1">Solo cuenta productos con costo registrado.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-perfume-dark mb-3">👤 Ventas por Vendedor / Agente</h3>
+                    <div id="report-by-agent" class="space-y-2"></div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-perfume-dark mb-3">🏆 Productos Más Vendidos</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left text-[10px] text-gray-400 uppercase border-b border-gray-100">
+                                    <th class="py-2 pr-2">Producto</th>
+                                    <th class="py-2 pr-2 text-center">Unid. Vendidas</th>
+                                    <th class="py-2 pr-2 text-right">Ingresos</th>
+                                    <th class="py-2 pr-2 text-right">Ganancia</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-top-products"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                        <h3 class="font-bold text-perfume-dark flex items-center gap-2">💳 Cuentas por Cobrar (ventas a crédito)</h3>
+                        <span class="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg">Total pendiente: <span id="report-credit-total">RD$ 0</span></span>
+                    </div>
+                    <div id="report-credit-list" class="space-y-2">
+                        <p class="text-sm text-gray-400 text-center py-4">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPESTAÑA: DATOS DE FACTURA (aislada de Configuración general) -->
+            <div id="billing-subtab-settings" class="hidden flex-1 overflow-y-auto p-4 md:p-8 w-full">
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-4 max-w-5xl mx-auto">
+                    <p class="text-xs text-blue-800">🧾 Personaliza cómo se ve tu recibo impreso. Se guarda por separado del diseño de la tienda. La vista previa de la izquierda se actualiza mientras escribes.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6 max-w-5xl mx-auto items-start">
+
+                    <!-- VISTA PREVIA DEL TICKET (estilo Eleventa) -->
+                    <div class="bg-white border-2 border-dashed border-gray-300 rounded-lg p-4 sticky top-0 mx-auto w-full max-w-[300px]" style="font-family: 'Courier New', monospace;">
+                        <div id="ticket-preview" class="text-[11px] leading-tight text-gray-900 space-y-0.5">
+                            <!-- Se rellena por JS: window.renderTicketPreview() -->
+                        </div>
+                    </div>
+
+                    <!-- CAMPOS DE CONFIGURACIÓN -->
+                    <div class="space-y-4">
+                        <div class="bg-white p-5 rounded-xl border border-gray-200">
+                            <h3 class="font-bold text-gray-800 mb-3 text-sm">🏪 Datos del Negocio</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Nombre del Negocio</label>
+                                    <input type="text" id="inv-cfg-business-name" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="FamlyFragrancerd">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">RNC / Cédula (opcional)</label>
+                                    <input type="text" id="inv-cfg-tax-id" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="Ej: 001-1234567-8">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Dirección</label>
+                                    <input type="text" id="inv-cfg-address" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="Calle, número, sector, ciudad">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Frase / Lema (línea debajo del nombre, opcional)</label>
+                                    <input type="text" id="inv-cfg-tagline" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder='Ej: "Tu esencia, tu identidad"'>
+                                </div>
+                                <div class="flex items-center gap-2 md:col-span-2">
+                                    <input type="checkbox" id="inv-cfg-show-logo" onchange="window.renderTicketPreview()" class="h-4 w-4">
+                                    <label for="inv-cfg-show-logo" class="text-xs font-bold text-gray-600">Mostrar logo en el encabezado del ticket</label>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Logo del encabezado (opcional — si lo dejas vacío, usa el logo general de Configuración → Identidad Visual)</label>
+                                    <input type="url" id="inv-cfg-logo-url" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="URL de imagen (PNG/JPG) para el ticket, puede ser distinta a la de la tienda">
+                                    <div class="flex items-center gap-2 mt-2">
+                                        <button type="button" onclick="window.testLogoLoad()" class="text-xs font-bold text-blue-600 hover:text-blue-800 border border-blue-200 hover:border-blue-400 px-3 py-1.5 rounded-lg transition">🔍 Verificar por qué no aparece el logo</button>
+                                        <span id="logo-diagnostic-result" class="text-xs"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-gray-200">
+                            <h3 class="font-bold text-gray-800 mb-3 text-sm">🔤 Estilo de Letra</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Tipo de letra</label>
+                                    <select id="inv-cfg-font-family" onchange="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500 bg-white">
+                                        <option value="helvetica">Helvetica (moderna, la más legible)</option>
+                                        <option value="courier">Courier (estilo máquina de escribir)</option>
+                                        <option value="times">Times (clásica, con serifas)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Grosor de letra</label>
+                                    <select id="inv-cfg-font-weight" onchange="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500 bg-white">
+                                        <option value="normal">Normal</option>
+                                        <option value="bold">Negrita (más gruesa, resalta más en térmica)</option>
+                                    </select>
+                                </div>
+                                <p class="text-[10px] text-gray-400 md:col-span-2">El nombre del negocio siempre sale en negrita para destacar. Esto controla el resto del texto del ticket (productos, totales, pie de página).</p>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Espaciado entre bloques (encabezado, productos, total, pie)</label>
+                                    <select id="inv-cfg-line-spacing" onchange="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500 bg-white">
+                                        <option value="compact">Compacto (ahorra papel)</option>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="wide">Amplio (más separado, más fácil de leer)</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Tamaño base de fuente (afecta todo el ticket)</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button type="button" onclick="document.getElementById('inv-cfg-font-size').value='12'; window.renderTicketPreview()" class="border-2 border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-bold py-2 rounded-lg text-sm transition">12 px (pequeño)</button>
+                                        <button type="button" onclick="document.getElementById('inv-cfg-font-size').value='16'; window.renderTicketPreview()" class="border-2 border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-bold py-2 rounded-lg text-sm transition">16 px (normal)</button>
+                                        <button type="button" onclick="document.getElementById('inv-cfg-font-size').value='20'; window.renderTicketPreview()" class="border-2 border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-bold py-2 rounded-lg text-sm transition">20 px (grande)</button>
+                                    </div>
+                                    <input type="hidden" id="inv-cfg-font-size" value="16">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-gray-200">
+                            <h3 class="font-bold text-gray-800 mb-3 text-sm">📱 Redes y Contacto (opcional, aparecen en el pie)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">WhatsApp</label>
+                                    <input type="text" id="inv-cfg-whatsapp" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="849-000-0000">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Instagram</label>
+                                    <input type="text" id="inv-cfg-instagram" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="@tunegocio">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">TikTok</label>
+                                    <input type="text" id="inv-cfg-tiktok" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="@tunegocio">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-gray-200">
+                            <h3 class="font-bold text-gray-800 mb-3 text-sm">🧾 Formato del Ticket</h3>
+                            <div class="space-y-2 mb-3">
+                                <label class="flex items-center gap-2 text-xs font-bold text-gray-600"><input type="checkbox" id="inv-cfg-show-unit-price" onchange="window.renderTicketPreview()" class="h-4 w-4">Incluir precio unitario en cada línea</label>
+                                <label class="flex items-center gap-2 text-xs font-bold text-gray-600"><input type="checkbox" id="inv-cfg-full-description" onchange="window.renderTicketPreview()" class="h-4 w-4">Imprimir descripción completa (usar varios renglones si no cabe)</label>
+                            </div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Datos del cliente a imprimir (si el cliente está seleccionado)</label>
+                            <div class="grid grid-cols-2 gap-1 mb-3">
+                                <label class="flex items-center gap-2 text-xs text-gray-600"><input type="checkbox" id="inv-cfg-print-client-name" onchange="window.renderTicketPreview()" class="h-3.5 w-3.5" checked>Nombre completo</label>
+                                <label class="flex items-center gap-2 text-xs text-gray-600"><input type="checkbox" id="inv-cfg-print-client-phone" onchange="window.renderTicketPreview()" class="h-3.5 w-3.5">Teléfono</label>
+                                <label class="flex items-center gap-2 text-xs text-gray-600"><input type="checkbox" id="inv-cfg-print-client-taxid" onchange="window.renderTicketPreview()" class="h-3.5 w-3.5">RNC/Cédula</label>
+                                <label class="flex items-center gap-2 text-xs text-gray-600"><input type="checkbox" id="inv-cfg-print-client-address" onchange="window.renderTicketPreview()" class="h-3.5 w-3.5">Dirección</label>
+                            </div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Mensaje al pie</label>
+                            <input type="text" id="inv-cfg-footer-msg" oninput="window.renderTicketPreview()" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm mb-3 focus:outline-none focus:border-blue-500" placeholder="¡Gracias por su compra!">
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Líneas extra al final (una por línea, opcional)</label>
+                            <textarea id="inv-cfg-footer-extra" oninput="window.renderTicketPreview()" rows="2" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="Ej: Horario: L-S 9am-6pm"></textarea>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-gray-200">
+                            <h3 class="font-bold text-gray-800 mb-1 text-sm">📧 Enviar Factura por Correo (EmailJS)</h3>
+                            <p class="text-xs text-gray-500 mb-3">Envía automáticamente el detalle de la venta al correo del cliente al facturar (si tiene correo guardado o lo escribes al momento). Requiere una cuenta gratuita en <a href="https://www.emailjs.com" target="_blank" class="text-blue-600 underline">emailjs.com</a> — pídele a tu desarrollador los 3 datos de abajo si no los tienes.</p>
+                            <div class="flex items-center gap-2 mb-3">
+                                <input type="checkbox" id="inv-cfg-email-enabled" class="h-4 w-4">
+                                <label for="inv-cfg-email-enabled" class="text-xs font-bold text-gray-600">Activar envío automático de correo al facturar</label>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Service ID</label>
+                                    <input type="text" id="inv-cfg-emailjs-service" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="service_xxxxxxx">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Template ID</label>
+                                    <input type="text" id="inv-cfg-emailjs-template" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="template_xxxxxxx">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Public Key</label>
+                                    <input type="text" id="inv-cfg-emailjs-pubkey" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500" placeholder="AbCdEfGhIjKlMnOp">
+                                </div>
+                            </div>
+                            <button onclick="window.testSendSampleEmail()" class="mt-3 text-xs font-bold text-blue-600 hover:text-blue-800 border border-blue-200 hover:border-blue-400 px-3 py-1.5 rounded-lg transition">✉️ Probar envío con correo de ejemplo</button>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="window.saveInvoiceConfig()" id="btn-save-inv-cfg" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-lg transition shadow-sm">Guardar Datos de Factura</button>
+                            <button onclick="window.testPrintSampleTicket()" class="border border-gray-300 hover:border-blue-400 text-gray-700 font-bold px-5 py-2.5 rounded-lg transition flex items-center gap-2">🖨️ Probar impresión con ticket de ejemplo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPESTAÑA: IMPRESORA -->
+            <div id="billing-subtab-printer" class="hidden flex-1 overflow-y-auto p-4 md:p-8 w-full">
+                <div class="max-w-2xl mx-auto space-y-4">
+                    <div class="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-800">
+                        ✅ Imprimir ya funciona sin instalar nada: al facturar se abre el ticket y solo confirmas en el diálogo de impresión de tu navegador.
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-800 mb-1 text-sm">🔌 Impresión silenciosa (opcional, avanzado)</h3>
+                        <p class="text-xs text-gray-500 mb-3">Esto es para imprimir SIN que aparezca el diálogo del navegador — requiere instalar un programa gratuito llamado QZ Tray en la computadora donde factures. No es obligatorio: sin esto, imprimir funciona igual, solo que con un paso extra de confirmar en el diálogo.</p>
+
+                        <div id="printer-status-panel" class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
+                            <div class="flex items-center gap-2 flex-1 min-w-0">
+                                <span id="printer-status-dot" class="w-2.5 h-2.5 rounded-full bg-gray-400 shrink-0"></span>
+                                <span id="printer-status-text" class="text-xs font-bold text-gray-600 truncate">Sin verificar todavía</span>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                                <select id="printer-select-dropdown" class="hidden text-xs border border-gray-300 rounded-lg px-2 py-1.5 max-w-[160px]"></select>
+                                <button id="btn-save-printer-selection" onclick="window.confirmPrinterSelection()" class="hidden text-xs font-bold bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg transition">Guardar</button>
+                                <button onclick="window.checkQzStatus(true)" class="text-xs font-bold text-blue-600 hover:text-blue-800 border border-blue-200 hover:border-blue-400 bg-white px-3 py-1.5 rounded-lg transition">🔌 Verificar / Conectar</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <a href="https://qz.io/download/" target="_blank" class="text-xs text-blue-600 hover:text-blue-800 underline">📥 Descargar QZ Tray (gratis)</a>
+                            <button onclick="window.disconnectPrinter(); window.checkQzStatus();" class="text-xs text-gray-400 hover:text-red-500 underline">Olvidar impresora guardada</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPESTAÑA: CLIENTES (ver, editar, buscar, crédito) -->
+            <div id="billing-subtab-clients" class="hidden flex-1 overflow-y-auto p-4 md:p-8 w-full">
+                <div class="max-w-4xl mx-auto space-y-4">
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="clients-panel-search" oninput="window.renderClientsPanel(this.value)" placeholder="🔍 Buscar por nombre, RNC/Cédula o teléfono..." class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+                        <button onclick="window.openAddCustomerModal()" class="shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg transition">+ Nuevo Cliente</button>
+                    </div>
+                    <div id="clients-panel-list" class="space-y-2">
+                        <p class="text-sm text-gray-400 text-center py-8">Cargando clientes...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EDITAR CLIENTE (datos + crédito) -->
+    <div id="edit-customer-modal" class="hidden fixed inset-0 bg-gray-900/60 z-[280] justify-center items-center opacity-100 transition-opacity duration-200 backdrop-blur-sm" onclick="if(event.target.id === 'edit-customer-modal') window.closeEditCustomerModal()">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md relative mx-4 max-h-[90vh] overflow-y-auto">
+            <button onclick="window.closeEditCustomerModal()" class="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl leading-none">&times;</button>
+            <h3 class="text-lg font-extrabold text-perfume-dark mb-4 flex items-center gap-2">✏️ Editar Cliente</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Nombre <span class="text-red-500">*</span></label>
+                    <input type="text" id="edit-customer-name" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">RNC / Cédula</label>
+                    <input type="text" id="edit-customer-taxid" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Teléfono</label>
+                    <input type="text" id="edit-customer-phone" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Correo</label>
+                    <input type="email" id="edit-customer-email" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Dirección</label>
+                    <input type="text" id="edit-customer-address" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mt-2">
+                    <label class="flex items-center gap-2 text-xs font-bold text-amber-900 mb-2">
+                        <input type="checkbox" id="edit-customer-credit-enabled" class="h-4 w-4"> Permitir facturas a crédito a este cliente
+                    </label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-amber-800 mb-1">Límite de crédito (RD$)</label>
+                            <input type="number" id="edit-customer-credit-limit" min="0" placeholder="0 = sin límite" class="w-full border border-amber-300 px-2 py-1.5 rounded-lg text-sm bg-white focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-amber-800 mb-1">Saldo actual (debe)</label>
+                            <div id="edit-customer-credit-balance" class="w-full border border-amber-200 px-2 py-1.5 rounded-lg text-sm bg-amber-100 font-bold text-amber-900">RD$ 0</div>
+                        </div>
+                    </div>
+                    <button onclick="window.registerCreditPayment()" id="btn-credit-payment" class="hidden mt-2 w-full text-xs font-bold text-green-700 border border-green-300 hover:bg-green-50 py-1.5 rounded-lg transition">💵 Registrar abono a este saldo</button>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-5">
+                <button onclick="window.deleteCustomer()" id="btn-delete-customer" class="text-xs font-bold text-red-500 hover:text-red-700 px-3">🗑️ Eliminar</button>
+                <button onclick="window.saveEditedCustomer()" id="btn-save-edited-customer" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition shadow-sm">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: AÑADIR CLIENTE (rápido, desde Facturación) -->
+    <div id="add-customer-modal" class="hidden fixed inset-0 bg-gray-900/60 z-[280] justify-center items-center opacity-100 transition-opacity duration-200 backdrop-blur-sm" onclick="if(event.target.id === 'add-customer-modal') window.closeAddCustomerModal()">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md relative mx-4">
+            <button onclick="window.closeAddCustomerModal()" class="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl leading-none">&times;</button>
+            <h3 class="text-lg font-extrabold text-perfume-dark mb-4 flex items-center gap-2">🧑‍💼 Nuevo Cliente</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Nombre <span class="text-red-500">*</span></label>
+                    <input type="text" id="new-customer-name" placeholder="Nombre completo" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">RNC / Cédula (opcional)</label>
+                    <input type="text" id="new-customer-taxid" placeholder="Ej: 001-1234567-8" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Teléfono (opcional)</label>
+                    <input type="text" id="new-customer-phone" placeholder="Ej: 809-555-1234" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Correo (opcional, para enviarle la factura)</label>
+                    <input type="email" id="new-customer-email" placeholder="cliente@correo.com" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">Dirección (opcional)</label>
+                    <input type="text" id="new-customer-address" placeholder="Calle, número, sector, ciudad" class="w-full border border-gray-300 px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                </div>
+            </div>
+            <button onclick="window.saveNewCustomer()" id="btn-save-new-customer" class="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition shadow-sm">Guardar Cliente</button>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN -->
+    <div id="login-modal" class="fixed inset-0 bg-gray-900/60 z-[150] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md relative transform scale-95 transition-transform duration-300" id="login-box">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 text-3xl leading-none">&times;</button>
+            <div class="text-center mb-6">
+                <h2 id="auth-title" class="text-2xl font-extrabold text-perfume-dark">Iniciar Sesión</h2>
+                <p id="auth-subtitle" class="text-gray-500 text-sm mt-1">Ingresa para gestionar tus pedidos</p>
+            </div>
+            <form id="login-form" onsubmit="handleAuth(event)" class="space-y-4">
+                <div id="name-field" class="hidden">
+                    <input type="text" id="auth-name" placeholder="Tu nombre y apellido" class="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-lg focus:border-perfume-magenta focus:outline-none">
+                </div>
+                <div id="phone-field" class="hidden">
+                    <input type="tel" id="auth-phone" placeholder="Tu número de WhatsApp" class="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-lg focus:border-perfume-magenta focus:outline-none">
+                </div>
+                <input type="email" id="auth-email" required placeholder="tu@correo.com" class="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-lg focus:border-perfume-magenta focus:outline-none">
+                <input type="password" id="auth-pass" required placeholder="••••••••" class="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-lg focus:border-perfume-magenta focus:outline-none">
+                <button type="submit" id="auth-submit-btn" class="w-full bg-perfume-dark text-white py-3.5 rounded-xl font-bold hover:bg-perfume-magenta transition">Ingresar</button>
+            </form>
+
+            <div class="mt-4 flex items-center justify-center space-x-2">
+                <hr class="w-full border-gray-200">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">O</span>
+                <hr class="w-full border-gray-200">
+            </div>
+
+            <button onclick="loginWithGoogle()" type="button" class="mt-4 w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continuar con Google
+            </button>
+
+            <div class="mt-6 text-center border-t border-gray-100 pt-6">
+                <p class="text-gray-600 text-sm"><span id="auth-toggle-text">¿No tienes cuenta?</span> <button onclick="toggleAuthMode()" id="auth-toggle-btn" type="button" class="text-perfume-magenta font-bold hover:underline">Crear cuenta</button></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN -->
+    <div id="custom-confirm-modal" class="fixed inset-0 bg-gray-900/60 z-[400] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm text-center transform scale-95 transition-transform duration-300" id="custom-confirm-box">
+            <div class="w-14 h-14 rounded-full bg-red-100 text-red-500 mx-auto flex items-center justify-center mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2" id="confirm-title">¿Confirmar acción?</h3>
+            <p class="text-sm text-gray-500 mb-6" id="confirm-desc">Esta acción no se puede deshacer.</p>
+            <div class="flex gap-3">
+                <button onclick="closeCustomConfirm()" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition">Cancelar</button>
+                <button id="btn-confirm-action" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600 transition shadow-md">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BANNER INSTALAR PWA -->
+    <div id="pwa-install-banner" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 z-[300] w-[calc(100%-2rem)] max-w-sm">
+        <div class="bg-gray-900 text-white rounded-2xl shadow-2xl p-4 flex items-center gap-3">
+            <img src="https://raw.githubusercontent.com/famlyfragrancerd-byte/famlyfragrancerd-web/54362eb6b882b258af2a8d6f066984c090a95436/logo%20png%20famly.png" class="w-10 h-10 rounded-xl object-contain bg-white p-0.5 shrink-0">
+            <div class="flex-1 min-w-0">
+                <p class="font-extrabold text-sm leading-tight">Instalar FamlyFragrance</p>
+                <p class="text-gray-400 text-[11px] mt-0.5">Accede más rápido desde tu pantalla de inicio</p>
+            </div>
+            <div class="flex gap-2 shrink-0">
+                <button onclick="window.dismissInstallBanner()" class="text-gray-400 hover:text-white text-xs px-2 py-1.5 rounded-lg transition">No</button>
+                <button onclick="window.triggerInstall()" class="bg-perfume-magenta text-white text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-perfume-dark transition">Instalar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALERTA EN PANTALLA: NUEVO PEDIDO -->
+    <div id="order-alert-banner" class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-[400] w-[calc(100%-2rem)] max-w-md">
+        <div class="bg-white border-2 border-green-500 rounded-2xl shadow-2xl p-4 flex items-center gap-3">
+            <div class="bg-green-500 text-white rounded-xl p-2 shrink-0 animate-bounce-slow">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="font-extrabold text-gray-900 text-sm leading-tight">¡Nuevo Pedido Recibido!</p>
+                <p id="order-alert-text" class="text-gray-500 text-xs mt-0.5 truncate"></p>
+            </div>
+            <button onclick="document.getElementById('order-alert-banner').classList.add('hidden')" class="text-gray-400 hover:text-red-500 p-1 shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 translate-y-full opacity-0 bg-gray-900 text-white px-6 py-3 rounded-full z-[300] transition duration-300 shadow-xl pointer-events-none font-medium text-sm">Mensaje</div>
+
+    <!-- SCRIPTS FIREBASE -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/core.js"></script>
+    <script type="module" src="js/site-config.js"></script>
+    <script type="module" src="js/catalog.js"></script>
+    <script type="module" src="js/admin-products.js"></script>
+    <script type="module" src="js/admin-orders.js"></script>
+    <script type="module" src="js/customers.js"></script>
+    <script type="module" src="js/billing.js"></script>
+    <script type="module" src="js/inventory.js"></script>
+    <script type="module" src="js/reports.js"></script>
+    <script type="module" src="js/admin-orders-dashboard.js"></script>
+    <script type="module" src="js/pdf.js"></script>
+    <script type="module" src="js/printer.js"></script>
+    <script type="module" src="js/notifications-orders.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/orders-history.js"></script>
+    <script type="module" src="js/cart.js"></script>
+
+    <!-- VENTANA PROMOCIONAL (POP-UP) -->
+    <div id="promo-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[150] flex items-center justify-center p-4" onclick="if(event.target.id === 'promo-modal') { this.classList.add('hidden'); this.classList.remove('flex'); }">
+        <div class="relative max-w-2xl w-full">
+            <a id="promo-link" href="#" target="_blank" class="block">
+                <img id="promo-img" src="" alt="Promoción" class="w-full h-auto rounded-2xl shadow-2xl max-h-[80vh] object-contain">
+            </a>
+            <button onclick="document.getElementById('promo-modal').classList.add('hidden'); document.getElementById('promo-modal').classList.remove('flex');" class="absolute top-4 right-4 bg-white/90 hover:bg-white text-black font-bold w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition text-xl leading-none">&times;</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ Configuración Inicial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-black text-white mb-2">⚙️ Configuración Inicial</h1>
+            <p class="text-purple-100">Ingresa tus datos de Firebase y tu tienda para comenzar</p>
+        </div>
+
+        <!-- Main Form -->
+        <form id="setup-form" class="space-y-6">
+            <!-- Firebase Config Section -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                    🔑 Claves de Firebase
+                </h2>
+                <p class="text-xs text-gray-500 mb-6">
+                    Obtén estos datos de <a href="https://console.firebase.google.com" target="_blank" class="text-blue-600 hover:underline">Firebase Console</a> → 
+                    Configuración del Proyecto → SDK de administración
+                </p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">API Key *</label>
+                        <input type="text" id="api-key" placeholder="AIzaSyD..." class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none" required>
+                        <p class="text-[10px] text-gray-400 mt-1">apiKey de tu configuración de Firebase</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Auth Domain *</label>
+                        <input type="text" id="auth-domain" placeholder="tu-proyecto.firebaseapp.com" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none" required>
+                        <p class="text-[10px] text-gray-400 mt-1">ej: mitienda.firebaseapp.com</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Project ID *</label>
+                        <input type="text" id="project-id" placeholder="tu-proyecto" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none" required>
+                        <p class="text-[10px] text-gray-400 mt-1">projectId sin guiones ni espacios</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Storage Bucket *</label>
+                        <input type="text" id="storage-bucket" placeholder="tu-proyecto.appspot.com" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none" required>
+                        <p class="text-[10px] text-gray-400 mt-1">ej: mitienda.appspot.com</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Messaging Sender ID *</label>
+                        <input type="text" id="messaging-sender-id" placeholder="123456789" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">App ID *</label>
+                        <input type="text" id="app-id" placeholder="1:123456789:web:abc123def456" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store Config Section -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                    🏪 Datos de tu Tienda
+                </h2>
+                <p class="text-xs text-gray-500 mb-6">
+                    Información que verán tus clientes en la página y en los recibos
+                </p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nombre de tu Tienda *</label>
+                        <input type="text" id="store-name" placeholder="JM CLOSET" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Descripción (opcional)</label>
+                        <input type="text" id="store-description" placeholder="Ropa y accesorios de moda" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">URL de tu Logo (opcional)</label>
+                        <input type="url" id="logo-url" placeholder="https://tu-sitio.com/logo.png" class="w-full border-2 border-gray-300 focus:border-purple-500 px-4 py-2 rounded-lg text-sm focus:outline-none">
+                        <p class="text-[10px] text-gray-400 mt-1">URL directa a imagen PNG o JPG (mejor GitHub o Imgur)</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Color Principal</label>
+                        <input type="color" id="primary-color" value="#FF1493" class="w-full h-12 border-2 border-gray-300 rounded-lg cursor-pointer">
+                        <p class="text-[10px] text-gray-400 mt-1">Color para botones y acentos</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 rounded-xl text-lg transition transform hover:scale-105 shadow-lg">
+                ✅ Guardar Configuración y Entrar
+            </button>
+
+            <p class="text-center text-xs text-purple-100">
+                Los datos se guardan de forma segura en tu navegador. <br>
+                Puedes cambiarlos después en Configuración → Restablecer
+            </p>
+        </form>
+
+        <!-- Video Tutorial Link -->
+        <div class="mt-8 bg-white/10 backdrop-blur rounded-xl p-4 text-center">
+            <p class="text-purple-100 text-xs">
+                ¿No sabes dónde encontrar tus claves de Firebase? 
+                <a href="#" class="text-white font-bold hover:underline">Ver tutorial en YouTube</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Cargar datos guardados si existen (para edición)
+        window.addEventListener('load', () => {
+            const savedConfig = localStorage.getItem('FIREBASE_CONFIG');
+            const savedStore = localStorage.getItem('STORE_CONFIG');
+            
+            if (savedConfig) {
+                try {
+                    const config = JSON.parse(savedConfig);
+                    document.getElementById('api-key').value = config.apiKey || '';
+                    document.getElementById('auth-domain').value = config.authDomain || '';
+                    document.getElementById('project-id').value = config.projectId || '';
+                    document.getElementById('storage-bucket').value = config.storageBucket || '';
+                    document.getElementById('messaging-sender-id').value = config.messagingSenderId || '';
+                    document.getElementById('app-id').value = config.appId || '';
+                } catch(e) {}
+            }
+            
+            if (savedStore) {
+                try {
+                    const store = JSON.parse(savedStore);
+                    document.getElementById('store-name').value = store.storeName || '';
+                    document.getElementById('store-description').value = store.storeDescription || '';
+                    document.getElementById('logo-url').value = store.logoUrl || '';
+                    document.getElementById('primary-color').value = store.primaryColor || '#FF1493';
+                } catch(e) {}
+            }
+        });
+
+        // Guardar configuración
+        document.getElementById('setup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const firebaseConfig = {
+                apiKey: document.getElementById('api-key').value.trim(),
+                authDomain: document.getElementById('auth-domain').value.trim(),
+                projectId: document.getElementById('project-id').value.trim(),
+                storageBucket: document.getElementById('storage-bucket').value.trim(),
+                messagingSenderId: document.getElementById('messaging-sender-id').value.trim(),
+                appId: document.getElementById('app-id').value.trim()
+            };
+
+            const storeConfig = {
+                storeName: document.getElementById('store-name').value.trim(),
+                storeDescription: document.getElementById('store-description').value.trim(),
+                logoUrl: document.getElementById('logo-url').value.trim(),
+                primaryColor: document.getElementById('primary-color').value
+            };
+
+            // Validar que no estén vacíos
+            if (!firebaseConfig.projectId) {
+                alert('❌ Por favor rellena todos los campos de Firebase marcados con *');
+                return;
+            }
+
+            // Guardar en localStorage
+            localStorage.setItem('FIREBASE_CONFIG', JSON.stringify(firebaseConfig));
+            localStorage.setItem('STORE_CONFIG', JSON.stringify(storeConfig));
+
+            // Mensaje de éxito y redireccionar
+            alert('✅ Configuración guardada. Entrando a la app...');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
